@@ -29,5 +29,6 @@ namespace BasicLang.AbstractTree
         public string Value { get; }
 
         public WhiteSpaceTrivia WhiteSpaceTrivia { get; }
+
     }
 }

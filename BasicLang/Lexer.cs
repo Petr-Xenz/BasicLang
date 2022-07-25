@@ -57,10 +57,16 @@ internal class Lexer
         var startingPosition = _position;
         _position++;
         _currentLine++;
-        MoveWhile((c) => char.IsNumber(c));
+        MoveWhile(CanBeNumber);
 
         var length = _position - startingPosition;
         return new Token(Number, _currentLine, _columnPosition, length, _source.Substring(startingPosition, length));
+
+        bool CanBeNumber(char current)
+        {
+            return char.IsDigit(current)
+                || current == '.' && char.IsDigit(PeekNext());
+        }
     }
 
     private void MoveWhile(Func<char, bool> predicate)
