@@ -17,6 +17,7 @@ public class LexerTests
             new Token(Number, 0, 0, 0, "23", new WhiteSpaceTrivia(0, 0)),
             new Token(Number, 0, 0, 0, "023", new WhiteSpaceTrivia(0, 0)),
             new Token(Number, 0, 0, 0, "14778", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -32,6 +33,7 @@ public class LexerTests
         {
             new Token(Number, 0, 0, 0, "1.23", new WhiteSpaceTrivia(0, 0)),
             new Token(Number, 0, 0, 0, "023.14778", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());

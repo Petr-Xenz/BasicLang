@@ -49,7 +49,7 @@ internal class Lexer
             }
         }
 
-        yield break;
+        yield return new Token(EoF, _currentLine, _columnPosition, 0, "");
     }
 
     private Token TryLexNumber()
