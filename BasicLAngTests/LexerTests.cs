@@ -98,6 +98,21 @@ public class LexerTests
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
 
+    [TestMethod]
+    public void Strings()
+    {
+        var source = "\"=(),;:\"";
+        var result = new Lexer(source).Lex().ToArray();
+
+        var expected = new Token[]
+        {
+            new Token(TokenType.String, 0, 0, 0, "=(),;:", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+        };
+
+        CollectionAssert.AreEqual(expected, result, new TokenComparer());
+    }
+
     private class TokenComparer : System.Collections.IComparer
     {
         public int Compare(object? x, object? y)

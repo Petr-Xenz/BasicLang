@@ -7,6 +7,7 @@
 
         Number,
         Boolean,
+        String,
 
         Equal,
         LessThen,

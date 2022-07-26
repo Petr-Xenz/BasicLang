@@ -43,70 +43,69 @@ internal class Lexer
             if (IsEoL())
             {
                 yield return new Token(EoL, _currentLine, _columnPosition, _newLineLength, Environment.NewLine);
-                _currentLine++;
-                _position += _newLineLength;
-                _columnPosition = 1;
-                continue;
+                MoveToNewLine();
             }
-
-            if (char.IsNumber(Peek()))
+            else if (char.IsNumber(Peek()))
             {
                 yield return TryLexNumber();
-                continue;
+                
             }
-
-            if (Peek() == '=' && PeekNext() == '=')
+            else if (Peek() == '"')
+            {
+                var startingPosition = _position;
+                _position++;
+                _currentLine++;
+                MoveWhile(c => c != '\n' || c != '\n');
+                // TODO error reporting
+                yield return new Token(TokenType.String, _columnPosition, _currentLine, _position - startingPosition, _source[(startingPosition + 1)..(_position - 1)]);
+            }
+            else if (Peek() == '=' && PeekNext() == '=')
             {
                 yield return new Token(Equal, _currentLine, _columnPosition, 2, "==");
                 _position += 2;
                 _columnPosition += 2;
-                continue;
             }
-
-            if (Peek() == '<' && PeekNext() == '>')
+            else if (Peek() == '<' && PeekNext() == '>')
             {
                 yield return new Token(NotEqual, _currentLine, _columnPosition, 2, "<>");
                 _position += 2;
                 _columnPosition += 2;
-                continue;
             }
-
-            if (Peek() == '>' && PeekNext() == '=')
+            else if (Peek() == '>' && PeekNext() == '=')
             {
                 yield return new Token(GreaterThenOrEqual, _currentLine, _columnPosition, 2, ">=");
                 _position += 2;
                 _columnPosition += 2;
-                continue;
             }
-
-            if (Peek() == '<' && PeekNext() == '=')
+            else if (Peek() == '<' && PeekNext() == '=')
             {
                 yield return new Token(LessThenOrEqual, _currentLine, _columnPosition, 2, "<=");
                 _position += 2;
                 _columnPosition += 2;
-                continue;
             }
-
-            if (_simpleOperatorsToType.TryGetValue(Peek(), out var type))
+            else if (_simpleOperatorsToType.TryGetValue(Peek(), out var type))
             {
                 yield return new Token(type, _currentLine, _columnPosition, 1, Peek().ToString());
                 _position++;
                 _columnPosition++;
-                continue;
             }
-
-
-            if (char.IsWhiteSpace(Peek()))
+            else if (char.IsWhiteSpace(Peek()))
             {
                 //TODO WST
                 _position++;
                 _columnPosition++;
                 MoveWhile(c => char.IsWhiteSpace(c));
-                continue;
             }
         }
 
         yield return new Token(EoF, _currentLine, _columnPosition, 0, "");
+    }
+
+    private void MoveToNewLine()
+    {
+        _currentLine++;
+        _position += _newLineLength;
+        _columnPosition = 1;
     }
 
     private Token TryLexNumber()
