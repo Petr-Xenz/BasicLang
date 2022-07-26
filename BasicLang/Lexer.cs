@@ -48,16 +48,25 @@ internal class Lexer
             else if (char.IsNumber(Peek()))
             {
                 yield return TryLexNumber();
-                
             }
             else if (Peek() == '"')
             {
                 var startingPosition = _position;
+                var startingColumn = _columnPosition;
                 _position++;
-                _currentLine++;
-                MoveWhile(c => c != '\n' || c != '\n');
+                _columnPosition++;
+                MoveWhile(c => c != '"' || c != '\n' || c != '\r');
                 // TODO error reporting
-                yield return new Token(TokenType.String, _columnPosition, _currentLine, _position - startingPosition, _source[(startingPosition + 1)..(_position - 1)]);
+                yield return new Token(TokenType.String, _currentLine, startingColumn, _position - startingPosition, _source[(startingPosition + 1)..(_position - 1)]);
+            }
+            else if (Peek() == '!')
+            {
+                var startingPosition = _position;
+                var startingColumn = _columnPosition;
+                _position++;
+                _columnPosition++;
+                MoveWhile(c => !(c == '\n' || c == '\r'));
+                yield return new Token(Comment, _currentLine, startingColumn, _position - startingPosition, _source[(startingPosition + 1)..(_position)]);
             }
             else if (Peek() == '=' && PeekNext() == '=')
             {
@@ -111,12 +120,13 @@ internal class Lexer
     private Token TryLexNumber()
     {
         var startingPosition = _position;
+        var startingColumn = _columnPosition;
         _position++;
-        _currentLine++;
+        _columnPosition++;
         MoveWhile(CanBeNumber);
 
         var length = _position - startingPosition;
-        return new Token(Number, _currentLine, _columnPosition, length, _source.Substring(startingPosition, length));
+        return new Token(Number, _currentLine, startingColumn, length, _source.Substring(startingPosition, length));
 
         bool CanBeNumber(char current)
         {
@@ -161,7 +171,7 @@ internal class Lexer
     private bool IsEoL()
     {
         return _newLineLength == 1
-            ? _source[_position] == '\n'
-            : _source[_position] == '\n' && PeekNext() == '\r';
+            ? _source[_position] == '\r'
+            : _source[_position] == '\r' && PeekNext() == '\n';
     }
 }

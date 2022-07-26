@@ -8,6 +8,7 @@
         Number,
         Boolean,
         String,
+        Comment,
 
         Equal,
         LessThen,

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BasicLang.AbstractTree
 {
-    internal class Token : ISourceLocation
+    internal record Token : ISourceLocation
     {
         public Token(TokenType type, int line, int column, int length, string value, WhiteSpaceTrivia trivia = default)
         {

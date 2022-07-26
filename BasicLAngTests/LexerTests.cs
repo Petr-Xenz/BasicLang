@@ -106,11 +106,44 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(TokenType.String, 0, 0, 0, "=(),;:", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(TokenType.String, 1, 1, 8, "=(),;:", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 1, 9, 0, "", new WhiteSpaceTrivia(0, 0)),
         };
 
-        CollectionAssert.AreEqual(expected, result, new TokenComparer());
+        CollectionAssert.AreEqual(expected, result);
+    }
+
+
+    [TestMethod]
+    public void Comments()
+    {
+        var source = "! =(),;:";
+        var result = new Lexer(source).Lex().ToArray();
+
+        var expected = new Token[]
+        {
+            new Token(Comment, 1, 1, 8, " =(),;:", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 1, 9, 0, "", new WhiteSpaceTrivia(0, 0)),
+        };
+
+        CollectionAssert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void TwoLineOfComments()
+    {
+        var source = $"! =(),;:{Environment.NewLine}! =(),;:";
+        var result = new Lexer(source).Lex().ToArray();
+
+        var expected = new Token[]
+        {
+            new Token(Comment, 1, 1, 8, " =(),;:", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoL, 1, 9, Environment.NewLine.Length, Environment.NewLine, new WhiteSpaceTrivia(0, 0)),
+            new Token(Comment, 2, 1, 8, " =(),;:", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 2, 9, 0, "", new WhiteSpaceTrivia(0, 0)),
+        };
+
+        CollectionAssert.AreEqual(expected, result);
     }
 
     private class TokenComparer : System.Collections.IComparer
