@@ -15,6 +15,16 @@ internal class Lexer
 
     private static int _newLineLength = Environment.NewLine.Length;
 
+    private static IReadOnlyDictionary<char, TokenType> _simpleOperatorsToType = new Dictionary<char, TokenType>
+    {
+        { '<', LessThen },
+        { '>', GreaterThen },
+        { '+', Addition },
+        { '-', Subtraction },
+        { '*', Multiplication },
+        { '/', Division },
+    };
+
     public Lexer(string source)
     {
         _source = source;
@@ -71,17 +81,9 @@ internal class Lexer
                 continue;
             }
 
-            if (Peek() == '>')
+            if (_simpleOperatorsToType.TryGetValue(Peek(), out var type))
             {
-                yield return new Token(GreaterThen, _currentLine, _columnPosition, 1, ">");
-                _position++;
-                _columnPosition++;
-                continue;
-            }
-
-            if (Peek() == '<')
-            {
-                yield return new Token(LessThen, _currentLine, _columnPosition, 1, "<");
+                yield return new Token(type, _currentLine, _columnPosition, 1, Peek().ToString());
                 _position++;
                 _columnPosition++;
                 continue;

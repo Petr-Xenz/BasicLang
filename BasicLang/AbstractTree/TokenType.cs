@@ -15,6 +15,11 @@
         GreaterThenOrEqual,
         NotEqual,
 
+        Addition,
+        Subtraction,
+        Multiplication,
+        Division,
+
         EoL,
         EoF,
     }
