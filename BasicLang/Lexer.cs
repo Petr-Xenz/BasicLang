@@ -23,6 +23,12 @@ internal class Lexer
         { '-', Subtraction },
         { '*', Multiplication },
         { '/', Division },
+        { '=', Assignment},
+        { '(', OpenParenthesis },
+        { ')', CloseParenthesis },
+        { ',', Comma},
+        { ';', Semicolon},
+        { ':', Colon },
     };
 
     public Lexer(string source)

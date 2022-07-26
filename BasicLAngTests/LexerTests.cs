@@ -78,6 +78,26 @@ public class LexerTests
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
 
+    [TestMethod]
+    public void SimpleOperators()
+    {
+        var source = "=(),;:";
+        var result = new Lexer(source).Lex().ToArray();
+
+        var expected = new Token[]
+        {
+            new Token(Assignment, 0, 0, 0, "=", new WhiteSpaceTrivia(0, 0)),
+            new Token(OpenParenthesis, 0, 0, 0, "(", new WhiteSpaceTrivia(0, 0)),
+            new Token(CloseParenthesis, 0, 0, 0, ")", new WhiteSpaceTrivia(0, 0)),
+            new Token(Comma, 0, 0, 0, ",", new WhiteSpaceTrivia(0, 0)),
+            new Token(Semicolon, 0, 0, 0, ";", new WhiteSpaceTrivia(0, 0)),
+            new Token(Colon, 0, 0, 0, ":", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+        };
+
+        CollectionAssert.AreEqual(expected, result, new TokenComparer());
+    }
+
     private class TokenComparer : System.Collections.IComparer
     {
         public int Compare(object? x, object? y)

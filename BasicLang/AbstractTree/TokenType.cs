@@ -20,6 +20,15 @@
         Multiplication,
         Division,
 
+        OpenParenthesis,
+        CloseParenthesis,
+
+        Assignment,
+
+        Comma,
+        Colon,
+        Semicolon,
+
         EoL,
         EoF,
     }
