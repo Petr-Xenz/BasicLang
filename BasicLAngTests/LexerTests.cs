@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Tests;
@@ -33,6 +34,26 @@ public class LexerTests
         {
             new Token(Number, 0, 0, 0, "1.23", new WhiteSpaceTrivia(0, 0)),
             new Token(Number, 0, 0, 0, "023.14778", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+        };
+
+        CollectionAssert.AreEqual(expected, result, new TokenComparer());
+    }
+
+    [TestMethod]
+    public void ComparsionOperators()
+    {
+        var source = "< <= >= ><>==";
+        var result = new Lexer(source).Lex().ToArray();
+
+        var expected = new Token[]
+        {
+            new Token(LessThen, 0, 0, 0, "<", new WhiteSpaceTrivia(0, 0)),
+            new Token(LessThenOrEqual, 0, 0, 0, "<=", new WhiteSpaceTrivia(0, 0)),
+            new Token(GreaterThenOrEqual, 0, 0, 0, ">=", new WhiteSpaceTrivia(0, 0)),
+            new Token(GreaterThen, 0, 0, 0, ">", new WhiteSpaceTrivia(0, 0)),
+            new Token(NotEqual, 0, 0, 0, "<>", new WhiteSpaceTrivia(0, 0)),
+            new Token(Equal, 0, 0, 0, "==", new WhiteSpaceTrivia(0, 0)),
             new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
         };
 

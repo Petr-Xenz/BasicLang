@@ -7,7 +7,14 @@
 
         Number,
         Boolean,
-        
+
+        Equal,
+        LessThen,
+        LessThenOrEqual,
+        GreaterThen,
+        GreaterThenOrEqual,
+        NotEqual,
+
         EoL,
         EoF,
     }

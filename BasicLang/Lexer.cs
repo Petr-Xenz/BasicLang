@@ -39,6 +39,55 @@ internal class Lexer
                 continue;
             }
 
+            if (Peek() == '=' && PeekNext() == '=')
+            {
+                yield return new Token(Equal, _currentLine, _columnPosition, 2, "==");
+                _position += 2;
+                _columnPosition += 2;
+                continue;
+            }
+
+            if (Peek() == '<' && PeekNext() == '>')
+            {
+                yield return new Token(NotEqual, _currentLine, _columnPosition, 2, "<>");
+                _position += 2;
+                _columnPosition += 2;
+                continue;
+            }
+
+            if (Peek() == '>' && PeekNext() == '=')
+            {
+                yield return new Token(GreaterThenOrEqual, _currentLine, _columnPosition, 2, ">=");
+                _position += 2;
+                _columnPosition += 2;
+                continue;
+            }
+
+            if (Peek() == '<' && PeekNext() == '=')
+            {
+                yield return new Token(LessThenOrEqual, _currentLine, _columnPosition, 2, "<=");
+                _position += 2;
+                _columnPosition += 2;
+                continue;
+            }
+
+            if (Peek() == '>')
+            {
+                yield return new Token(GreaterThen, _currentLine, _columnPosition, 1, ">");
+                _position++;
+                _columnPosition++;
+                continue;
+            }
+
+            if (Peek() == '<')
+            {
+                yield return new Token(LessThen, _currentLine, _columnPosition, 1, "<");
+                _position++;
+                _columnPosition++;
+                continue;
+            }
+
+
             if (char.IsWhiteSpace(Peek()))
             {
                 //TODO WST
