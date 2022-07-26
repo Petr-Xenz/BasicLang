@@ -7,6 +7,7 @@
 
         Number,
         Boolean,
+        Identifier,
         String,
         Comment,
 

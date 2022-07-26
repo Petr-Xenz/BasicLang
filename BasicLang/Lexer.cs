@@ -49,6 +49,10 @@ internal class Lexer
             {
                 yield return TryLexNumber();
             }
+            else if (char.IsLetter(Peek()))
+            {
+                yield return TryLexIdentifierOrKeyword();
+            }
             else if (Peek() == '"')
             {
                 var startingPosition = _position;
@@ -133,6 +137,18 @@ internal class Lexer
             return char.IsDigit(current)
                 || current == '.' && char.IsDigit(PeekNext());
         }
+    }
+
+    private Token TryLexIdentifierOrKeyword()
+    {
+        var startingPosition = _position;
+        var startingColumn = _columnPosition;
+        _position++;
+        _columnPosition++;
+        MoveWhile(char.IsLetterOrDigit);
+
+        var length = _position - startingPosition;
+        return new Token(Identifier, _currentLine, startingColumn, length, _source.Substring(startingPosition, length));
     }
 
     private void MoveWhile(Func<char, bool> predicate)

@@ -41,7 +41,24 @@ public class LexerTests
     }
 
     [TestMethod]
-    public void ComparsionOperators()
+    public void IdentifierLexing()
+    {
+        var source = "foo bar1 b1az";
+        var result = new Lexer(source).Lex().ToArray();
+
+        var expected = new Token[]
+        {
+            new Token(Identifier, 0, 0, 0, "foo", new WhiteSpaceTrivia(0, 0)),
+            new Token(Identifier, 0, 0, 0, "bar1", new WhiteSpaceTrivia(0, 0)),
+            new Token(Identifier, 0, 0, 0, "b1az", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+        };
+
+        CollectionAssert.AreEqual(expected, result, new TokenComparer());
+    }
+
+    [TestMethod]
+    public void ComparsionOperatorsLexing()
     {
         var source = "< <= >= ><>==";
         var result = new Lexer(source).Lex().ToArray();
@@ -61,7 +78,7 @@ public class LexerTests
     }
 
     [TestMethod]
-    public void ArithmeticOperators()
+    public void ArithmeticOperatorsLexing()
     {
         var source = "+-*/";
         var result = new Lexer(source).Lex().ToArray();
@@ -79,7 +96,7 @@ public class LexerTests
     }
 
     [TestMethod]
-    public void SimpleOperators()
+    public void SimpleOperatorsLexing()
     {
         var source = "=(),;:";
         var result = new Lexer(source).Lex().ToArray();
@@ -99,7 +116,7 @@ public class LexerTests
     }
 
     [TestMethod]
-    public void Strings()
+    public void StringsLexing()
     {
         var source = "\"=(),;:\"";
         var result = new Lexer(source).Lex().ToArray();
@@ -115,7 +132,7 @@ public class LexerTests
 
 
     [TestMethod]
-    public void Comments()
+    public void CommentsLexing()
     {
         var source = "! =(),;:";
         var result = new Lexer(source).Lex().ToArray();
@@ -130,7 +147,7 @@ public class LexerTests
     }
 
     [TestMethod]
-    public void TwoLineOfComments()
+    public void TwoLineOfCommentsLexing()
     {
         var source = $"! =(),;:{Environment.NewLine}! =(),;:";
         var result = new Lexer(source).Lex().ToArray();
