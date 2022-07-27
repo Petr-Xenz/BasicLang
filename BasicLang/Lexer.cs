@@ -31,6 +31,10 @@ internal class Lexer
         { ':', Colon },
     };
 
+    private static IReadOnlyDictionary<string, TokenType> _keywordsToTokens = Enumerable.Range((int)Program, End - Program + 1)
+        .Select(i => (TokenType)i)
+        .ToDictionary(i => i.ToString().ToLower(), i => i);
+
     public Lexer(string source)
     {
         _source = source;
@@ -148,7 +152,9 @@ internal class Lexer
         MoveWhile(char.IsLetterOrDigit);
 
         var length = _position - startingPosition;
-        return new Token(Identifier, _currentLine, startingColumn, length, _source.Substring(startingPosition, length));
+        var value = _source.Substring(startingPosition, length);
+        var type = _keywordsToTokens.TryGetValue(value.ToLower(), out var keyword) ? keyword : Identifier;
+        return new Token(type, _currentLine, startingColumn, length, value);
     }
 
     private void MoveWhile(Func<char, bool> predicate)

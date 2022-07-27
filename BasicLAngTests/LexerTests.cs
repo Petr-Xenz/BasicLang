@@ -58,6 +58,24 @@ public class LexerTests
     }
 
     [TestMethod]
+    public void KeywordsLexing()
+    {
+        var source = "program FOR iF Then";
+        var result = new Lexer(source).Lex().ToArray();
+
+        var expected = new Token[]
+        {
+            new Token(Program, 0, 0, 0, "program", new WhiteSpaceTrivia(0, 0)),
+            new Token(For, 0, 0, 0, "FOR", new WhiteSpaceTrivia(0, 0)),
+            new Token(If, 0, 0, 0, "iF", new WhiteSpaceTrivia(0, 0)),
+            new Token(Then, 0, 0, 0, "Then", new WhiteSpaceTrivia(0, 0)),
+            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+        };
+
+        CollectionAssert.AreEqual(expected, result, new TokenComparer());
+    }
+
+    [TestMethod]
     public void ComparsionOperatorsLexing()
     {
         var source = "< <= >= ><>==";

@@ -32,8 +32,10 @@
         Colon,
         Semicolon,
 
+        EoL,
+        EoF,
+
         Program,
-        End,
         Let,
         Print,
         Input,
@@ -54,8 +56,6 @@
         Def,
         Declare,
         Dim,
-
-        EoL,
-        EoF,
+        End,
     }
 }
