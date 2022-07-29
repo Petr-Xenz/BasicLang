@@ -14,11 +14,11 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Number, 0, 0, 0, "1", new WhiteSpaceTrivia(0, 0)),
-            new Token(Number, 0, 0, 0, "23", new WhiteSpaceTrivia(0, 0)),
-            new Token(Number, 0, 0, 0, "023", new WhiteSpaceTrivia(0, 0)),
-            new Token(Number, 0, 0, 0, "14778", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Number, "1", new SourcePosition(0, 0, 0, 0)),
+            new Token(Number, "23", new SourcePosition(0, 0, 0, 0)),
+            new Token(Number, "023", new SourcePosition(0, 0, 0, 0)),
+            new Token(Number, "14778", new SourcePosition(0, 0, 0, 0)),
+            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -32,9 +32,9 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Number, 0, 0, 0, "1.23", new WhiteSpaceTrivia(0, 0)),
-            new Token(Number, 0, 0, 0, "023.14778", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Number, "1.23", new SourcePosition(0, 0, 0, 0)),
+            new Token(Number, "023.14778", new SourcePosition(0, 0, 0, 0)),
+            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -48,10 +48,10 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Identifier, 0, 0, 0, "foo", new WhiteSpaceTrivia(0, 0)),
-            new Token(Identifier, 0, 0, 0, "bar1", new WhiteSpaceTrivia(0, 0)),
-            new Token(Identifier, 0, 0, 0, "b1az", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Identifier, "foo", new SourcePosition(0, 0, 0, 0)),
+            new Token(Identifier, "bar1", new SourcePosition(0, 0, 0, 0)),
+            new Token(Identifier, "b1az", new SourcePosition(0, 0, 0, 0)),
+            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -65,11 +65,11 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Program, 0, 0, 0, "program", new WhiteSpaceTrivia(0, 0)),
-            new Token(For, 0, 0, 0, "FOR", new WhiteSpaceTrivia(0, 0)),
-            new Token(If, 0, 0, 0, "iF", new WhiteSpaceTrivia(0, 0)),
-            new Token(Then, 0, 0, 0, "Then", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Program, "program", new SourcePosition(0, 0, 0, 0)),
+            new Token(For, "FOR", new SourcePosition(0, 0, 0, 0)),
+            new Token(If, "iF", new SourcePosition(0, 0, 0, 0)),
+            new Token(Then, "Then", new SourcePosition(0, 0, 0, 0)),
+            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -83,13 +83,13 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(LessThen, 0, 0, 0, "<", new WhiteSpaceTrivia(0, 0)),
-            new Token(LessThenOrEqual, 0, 0, 0, "<=", new WhiteSpaceTrivia(0, 0)),
-            new Token(GreaterThenOrEqual, 0, 0, 0, ">=", new WhiteSpaceTrivia(0, 0)),
-            new Token(GreaterThen, 0, 0, 0, ">", new WhiteSpaceTrivia(0, 0)),
-            new Token(NotEqual, 0, 0, 0, "<>", new WhiteSpaceTrivia(0, 0)),
-            new Token(Equal, 0, 0, 0, "==", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(LessThen, "<", new SourcePosition(0, 0, 0, 0)),
+            new Token(LessThenOrEqual, "<=", new SourcePosition(0, 0, 0, 0)),
+            new Token(GreaterThenOrEqual, ">=", new SourcePosition(0, 0, 0, 0)),
+            new Token(GreaterThen, ">", new SourcePosition(0, 0, 0, 0)),
+            new Token(NotEqual, "<>", new SourcePosition(0, 0, 0, 0)),
+            new Token(Equal, "==", new SourcePosition(0, 0, 0, 0)),
+            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -103,11 +103,11 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Addition, 0, 0, 0, "+", new WhiteSpaceTrivia(0, 0)),
-            new Token(Subtraction, 0, 0, 0, "-", new WhiteSpaceTrivia(0, 0)),
-            new Token(Multiplication, 0, 0, 0, "*", new WhiteSpaceTrivia(0, 0)),
-            new Token(Division, 0, 0, 0, "/", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Addition, "+", new SourcePosition(0, 0, 0, 0)),
+            new Token(Subtraction, "-", new SourcePosition(0, 0, 0, 0)),
+            new Token(Multiplication, "*", new SourcePosition(0, 0, 0, 0)),
+            new Token(Division, "/", new SourcePosition(0, 0, 0, 0)),
+            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -121,13 +121,13 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Assignment, 0, 0, 0, "=", new WhiteSpaceTrivia(0, 0)),
-            new Token(OpenParenthesis, 0, 0, 0, "(", new WhiteSpaceTrivia(0, 0)),
-            new Token(CloseParenthesis, 0, 0, 0, ")", new WhiteSpaceTrivia(0, 0)),
-            new Token(Comma, 0, 0, 0, ",", new WhiteSpaceTrivia(0, 0)),
-            new Token(Semicolon, 0, 0, 0, ";", new WhiteSpaceTrivia(0, 0)),
-            new Token(Colon, 0, 0, 0, ":", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 0, 0, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Assignment, "=", new SourcePosition(0, 0, 0, 0)),
+            new Token(OpenParenthesis, "(", new SourcePosition(0, 0, 0, 0)),
+            new Token(CloseParenthesis, ")", new SourcePosition(0, 0, 0, 0)),
+            new Token(Comma, ",", new SourcePosition(0, 0, 0, 0)),
+            new Token(Semicolon, ";", new SourcePosition(0, 0, 0, 0)),
+            new Token(Colon, ":", new SourcePosition(0, 0, 0, 0)),
+            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -141,8 +141,8 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(TokenType.String, 1, 1, 8, "=(),;:", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 1, 9, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(TokenType.String, "=(),;:", new SourcePosition(0, 1, 1, 8)),
+            new Token(EoF, "", new SourcePosition(8, 1, 9, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result);
@@ -157,8 +157,8 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Comment, 1, 1, 8, " =(),;:", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 1, 9, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Comment, " =(),;:", new SourcePosition(0, 1, 1, 8)),
+            new Token(EoF, "", new SourcePosition(8, 1, 9, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result);
@@ -172,10 +172,10 @@ public class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Comment, 1, 1, 8, " =(),;:", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoL, 1, 9, Environment.NewLine.Length, Environment.NewLine, new WhiteSpaceTrivia(0, 0)),
-            new Token(Comment, 2, 1, 8, " =(),;:", new WhiteSpaceTrivia(0, 0)),
-            new Token(EoF, 2, 9, 0, "", new WhiteSpaceTrivia(0, 0)),
+            new Token(Comment, " =(),;:", new SourcePosition(0,1, 1, 8)),
+            new Token(EoL, Environment.NewLine, new SourcePosition(8, 1, 9, Environment.NewLine.Length)),
+            new Token(Comment, " =(),;:", new SourcePosition(10, 2, 1, 8)),
+            new Token(EoF, "", new SourcePosition(18, 2, 9, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result);

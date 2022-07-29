@@ -46,7 +46,7 @@ internal class Lexer
         {
             if (IsEoL())
             {
-                yield return new Token(EoL, _currentLine, _columnPosition, _newLineLength, Environment.NewLine);
+                yield return new Token(EoL, Environment.NewLine, new SourcePosition(_position, _currentLine, _columnPosition, _newLineLength));
                 MoveToNewLine();
             }
             else if (char.IsNumber(Peek()))
@@ -65,7 +65,7 @@ internal class Lexer
                 _columnPosition++;
                 MoveWhile(c => c != '"' || c != '\n' || c != '\r');
                 // TODO error reporting
-                yield return new Token(TokenType.String, _currentLine, startingColumn, _position - startingPosition, _source[(startingPosition + 1)..(_position - 1)]);
+                yield return new Token(TokenType.String, _source[(startingPosition + 1)..(_position - 1)], new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition));
             }
             else if (Peek() == '!')
             {
@@ -74,35 +74,35 @@ internal class Lexer
                 _position++;
                 _columnPosition++;
                 MoveWhile(c => !(c == '\n' || c == '\r'));
-                yield return new Token(Comment, _currentLine, startingColumn, _position - startingPosition, _source[(startingPosition + 1).._position]);
+                yield return new Token(Comment, _source[(startingPosition + 1).._position], new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition));
             }
             else if (Peek() == '=' && PeekNext() == '=')
             {
-                yield return new Token(Equal, _currentLine, _columnPosition, 2, "==");
+                yield return new Token(Equal, "==", new SourcePosition(_position, _currentLine, _columnPosition, 2));
                 _position += 2;
                 _columnPosition += 2;
             }
             else if (Peek() == '<' && PeekNext() == '>')
             {
-                yield return new Token(NotEqual, _currentLine, _columnPosition, 2, "<>");
+                yield return new Token(NotEqual, "<>", CreateSimplePosition(2));
                 _position += 2;
                 _columnPosition += 2;
             }
             else if (Peek() == '>' && PeekNext() == '=')
             {
-                yield return new Token(GreaterThenOrEqual, _currentLine, _columnPosition, 2, ">=");
+                yield return new Token(GreaterThenOrEqual, ">=", CreateSimplePosition(2));
                 _position += 2;
                 _columnPosition += 2;
             }
             else if (Peek() == '<' && PeekNext() == '=')
             {
-                yield return new Token(LessThenOrEqual, _currentLine, _columnPosition, 2, "<=");
+                yield return new Token(LessThenOrEqual, "<=", CreateSimplePosition(2));
                 _position += 2;
                 _columnPosition += 2;
             }
             else if (_simpleOperatorsToType.TryGetValue(Peek(), out var type))
             {
-                yield return new Token(type, _currentLine, _columnPosition, 1, Peek().ToString());
+                yield return new Token(type, Peek().ToString(), CreateSimplePosition(1));
                 _position++;
                 _columnPosition++;
             }
@@ -115,8 +115,10 @@ internal class Lexer
             }
         }
 
-        yield return new Token(EoF, _currentLine, _columnPosition, 0, "");
+        yield return new Token(EoF, "", CreateSimplePosition(0));
     }
+
+    private SourcePosition CreateSimplePosition(int length) => new SourcePosition(_position, _currentLine, _columnPosition, length);
 
     private void MoveToNewLine()
     {
@@ -134,7 +136,7 @@ internal class Lexer
         MoveWhile(CanBeNumber);
 
         var length = _position - startingPosition;
-        return new Token(Number, _currentLine, startingColumn, length, _source.Substring(startingPosition, length));
+        return new Token(Number, _source.Substring(startingPosition, length), new SourcePosition(startingPosition, _currentLine, startingColumn, length));
 
         bool CanBeNumber(char current)
         {
@@ -154,7 +156,7 @@ internal class Lexer
         var length = _position - startingPosition;
         var value = _source.Substring(startingPosition, length);
         var type = _keywordsToTokens.TryGetValue(value.ToLower(), out var keyword) ? keyword : Identifier;
-        return new Token(type, _currentLine, startingColumn, length, value);
+        return new Token(type, value, new SourcePosition(startingPosition, _currentLine, startingColumn, length));
     }
 
     private void MoveWhile(Func<char, bool> predicate)

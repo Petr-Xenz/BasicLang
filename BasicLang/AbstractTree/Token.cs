@@ -1,34 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BasicLang.AbstractTree
+﻿namespace BasicLang.AbstractTree
 {
-    internal record Token : ISourceLocation
+    internal record Token : ICodeElement
     {
-        public Token(TokenType type, int line, int column, int length, string value, WhiteSpaceTrivia trivia = default)
+        public Token(TokenType type, string value, SourcePosition position)
         {
             Type = type;
-            Line = line;
-            Column = column;
-            Length = length;
             Value = value;
-            WhiteSpaceTrivia = trivia;
+            SourcePosition = position;
         }
 
         public TokenType Type { get; }
-        
-        public int Line { get; }
-
-        public int Column { get; }
-
-        public int Length { get; }
 
         public string Value { get; }
 
-        public WhiteSpaceTrivia WhiteSpaceTrivia { get; }
-
+        public SourcePosition SourcePosition { get; }
     }
 }

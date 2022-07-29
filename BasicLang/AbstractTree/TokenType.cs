@@ -1,6 +1,6 @@
 ﻿namespace BasicLang.AbstractTree
 {
-    public enum TokenType
+    internal enum TokenType
     {
         None,
         Unknown,
