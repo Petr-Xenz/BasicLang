@@ -1,7 +1,7 @@
 ﻿using BasicLang.AbstractTree;
 using static BasicLang.AbstractTree.TokenType;
 
-namespace BasicLang;
+namespace BasicLang.Parsing;
 
 internal class Lexer
 {
@@ -74,7 +74,7 @@ internal class Lexer
                 _position++;
                 _columnPosition++;
                 MoveWhile(c => !(c == '\n' || c == '\r'));
-                yield return new Token(Comment, _currentLine, startingColumn, _position - startingPosition, _source[(startingPosition + 1)..(_position)]);
+                yield return new Token(Comment, _currentLine, startingColumn, _position - startingPosition, _source[(startingPosition + 1).._position]);
             }
             else if (Peek() == '=' && PeekNext() == '=')
             {
