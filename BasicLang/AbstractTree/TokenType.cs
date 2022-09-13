@@ -37,6 +37,7 @@
 
         Program,
         Let,
+        Goto,
         Print,
         Input,
         For,
