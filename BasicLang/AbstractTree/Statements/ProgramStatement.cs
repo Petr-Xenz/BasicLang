@@ -2,16 +2,15 @@
 {
     internal class ProgramStatement : IStatement
     {
-        public ProgramStatement(string value, IEnumerable<IStatement> children, SourcePosition sourcePosition)
+        public ProgramStatement(IEnumerable<IStatement> children, SourcePosition sourcePosition)
         {
-            Value = value;
             Children = children;
             SourcePosition = sourcePosition;
         }
 
         public SourcePosition GeneralErrorPosition => new(SourcePosition.Offset, SourcePosition.Line, SourcePosition.Column, 7);
 
-        public string Value { get; }
+        public string Value { get; } = "TODO";
 
         public IEnumerable<IStatement> Children { get; }
 

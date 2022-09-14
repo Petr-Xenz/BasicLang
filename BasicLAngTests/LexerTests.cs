@@ -4,7 +4,7 @@ using static BasicLang.AbstractTree.TokenType;
 namespace BasicLang.Tests;
 
 [TestClass]
-public class LexerTests
+public partial class LexerTests
 {
     [TestMethod]
     public void IntegerLexing()

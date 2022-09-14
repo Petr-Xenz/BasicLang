@@ -1,4 +1,6 @@
-﻿namespace BasicLang.AbstractTree
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace BasicLang.AbstractTree
 {
     internal readonly struct SourcePosition
     {
@@ -20,6 +22,11 @@
         public int Length { get; }
 
         WhiteSpaceTrivia WhiteSpaceTrivia { get; }
+
+        public override string ToString()
+        {
+            return $"{Line}:{Column}";
+        }
 
     }
 }
