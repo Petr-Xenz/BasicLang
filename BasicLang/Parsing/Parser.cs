@@ -1,12 +1,14 @@
 ﻿using BasicLang.AbstractTree;
 using BasicLang.AbstractTree.Statements;
+using System.IO;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Parsing
 {
-    internal class Parser
+    internal partial class Parser
     {
         private readonly IReadOnlyList<Token> _tokens;
+        private readonly ExpressionParser _expressionParser;
 
         private int _position;
 
@@ -17,6 +19,7 @@ namespace BasicLang.Parsing
         {
             _tokens = tokens.Where(t => t.Type != Comment).ToArray();
             _sourceCode = sourceCode;
+            _expressionParser = new(this);
         }
 
         public ParseSyntaxTree Parse()
@@ -52,7 +55,7 @@ namespace BasicLang.Parsing
             if (lineNumber.Type == Number)
             {
                 MovePosition();
-                return new GotoStatement(lineNumber.Value, GetSourcePositionFromRange(current.SourcePosition, lineNumber.SourcePosition));
+                return new GotoStatement(lineNumber.Value, GetSourcePositionFromRange(current, lineNumber));
             }
             else
             {
@@ -65,7 +68,7 @@ namespace BasicLang.Parsing
             var startPostion = initial.SourcePosition;
             var programName = PeekNext();
 
-            if (programName.Type != Identifier)
+            if (!Match(Identifier))
             {
                 MovePostitionToEnd();
                 var error = "Program identifier expected";
@@ -99,9 +102,19 @@ namespace BasicLang.Parsing
             return result;
         }
 
-        private IStatement ParseLetVariableDeclarationExpression(Token token)
+        private IStatement ParseLetVariableDeclarationExpression(Token initial)
         {
-            throw new NotImplementedException();
+            if (!Match(Identifier))
+            {
+                MovePosition();
+                throw new ProgramException("Identifier expected", Peek().SourcePosition);
+            }
+
+            MovePosition();
+            var varToken = Peek();
+            var expression = _expressionParser.Parse(varToken);
+            return new VariableDeclarationStatement(new ExpressionStatement(expression), varToken.Value,
+                GetSourcePositionFromRange(initial, varToken), GetSourcePositionFromRange(initial, Peek()));
         }
 
         private void MovePosition(int step = 1)
@@ -126,7 +139,7 @@ namespace BasicLang.Parsing
         private IEnumerable<IStatement> ParseUntilTokenMet(TokenType type)
         {
             var result = new List<IStatement>();
-            while (PeekNext().Type != type)
+            while (!Match(type))
             {
                 MovePosition();
                 result.Add(ParseStatement());
@@ -139,8 +152,14 @@ namespace BasicLang.Parsing
             _parsingErrors.Add(new ProgramError(text, position));
         }
 
+        private SourcePosition GetSourcePositionFromRange(ICodeElement start, ICodeElement end) =>
+            GetSourcePositionFromRange(start.SourcePosition, end.SourcePosition);
+
         private SourcePosition GetSourcePositionFromRange(SourcePosition start, SourcePosition end) =>
             new(start.Offset, start.Line, start.Column, end.Offset - start.Offset + end.Length);
 
+        private bool Match(TokenType type) => PeekNext().Type == type;
+
+        private void Skip(int step = 1) => _position += step;
     }
 }

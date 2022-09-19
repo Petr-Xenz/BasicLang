@@ -1,11 +1,12 @@
 ﻿namespace BasicLang.AbstractTree.Statements
 {
-    internal class StatementExpression : IStatement
+    internal class ExpressionStatement : IStatement
     {
-        public StatementExpression(IExpression child)
+        public ExpressionStatement(IExpression child)
         {
             Child = child;
         }
+
         public IExpression Child { get; }
 
         public SourcePosition GeneralErrorPosition => Child.GeneralErrorPosition;

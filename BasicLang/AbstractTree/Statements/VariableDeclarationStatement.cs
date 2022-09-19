@@ -1,17 +1,17 @@
 ﻿namespace BasicLang.AbstractTree.Statements
 {
-    internal class VariableDeclaration : IStatement
+    internal class VariableDeclarationStatement : IStatement
     {
-        public VariableDeclaration(StatementExpression expression, string variableName, SourcePosition generalErrorPosition, string value, SourcePosition sourcePosition)
+        public VariableDeclarationStatement(ExpressionStatement expression, string variableName, SourcePosition generalErrorPosition, SourcePosition sourcePosition)
         {
             Expression = expression;
             VariableName = variableName;
             GeneralErrorPosition = generalErrorPosition;
-            Value = value;
+            Value = $"let {expression.Value}";
             SourcePosition = sourcePosition;
         }
 
-        public StatementExpression Expression { get; }
+        public ExpressionStatement Expression { get; }
 
         public string VariableName { get; }
 
