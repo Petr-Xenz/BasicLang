@@ -1,5 +1,6 @@
 ﻿using BasicLang.AbstractTree;
 using BasicLang.AbstractTree.Statements.Expressions;
+using System.Globalization;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Parsing
@@ -93,7 +94,7 @@ namespace BasicLang.Parsing
                 {
                     if (current.Value.Contains('.'))
                     {
-                        return new FloatLiteralExpression(double.Parse(current.Value), current.SourcePosition);
+                        return new FloatLiteralExpression(double.Parse(current.Value, CultureInfo.InvariantCulture), current.SourcePosition);
                     }
                     else
                     {
