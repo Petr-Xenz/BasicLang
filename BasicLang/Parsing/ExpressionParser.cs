@@ -65,14 +65,42 @@ namespace BasicLang.Parsing
 
             private IExpression ParseTerm(Token current)
             {
-                //TODO
-                return ParseFactor(current);
+                var left = ParseFactor(current);
+
+                while (Match(Addition, Subtraction))
+                {
+                    var op = PeekNext();
+                    Skip(2);
+                    var right = ParseFactor(Peek());
+                    return op.Type switch
+                    {
+                        Addition => new AdditionExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        Subtraction => new SubtractionExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        _ => throw new ProgramException(op.Type.ToString(), op.SourcePosition)
+                    };
+                }
+
+                return left;
             }
 
             private IExpression ParseFactor(Token current)
             {
-                //TODO
-                return ParseUnary(current);
+                var left = ParseUnary(current);
+
+                while (Match(Multiplication, Division))
+                {
+                    var op = PeekNext();
+                    Skip(2);
+                    var right = ParseUnary(Peek());
+                    return op.Type switch
+                    {
+                        Multiplication => new MultiplicationExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        Division => new DivisionExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        _ => throw new ProgramException(op.Type.ToString(), op.SourcePosition)
+                    };
+                }
+
+                return left;
             }
 
             private IExpression ParseUnary(Token current)
@@ -107,9 +135,15 @@ namespace BasicLang.Parsing
 
             private bool Match(TokenType type) => _parser.Match(type);
 
+            private bool Match(params TokenType[] types) => _parser.Match(types);
+
             private void Skip(int step = 1) => _parser.Skip(step);
 
+            private Token Consume() => _parser.Consume();
+
             private Token Peek() => _parser.Peek();
+            
+            private Token PeekNext() => _parser.PeekNext();
 
             private SourcePosition GetSourcePositionFromRange(SourcePosition start, SourcePosition end) =>
                 _parser.GetSourcePositionFromRange(start, end);

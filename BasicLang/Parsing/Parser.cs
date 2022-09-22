@@ -160,6 +160,20 @@ namespace BasicLang.Parsing
 
         private bool Match(TokenType type) => PeekNext().Type == type;
 
+        private bool Match(params TokenType[] types)
+        {
+            var next = PeekNext().Type;
+            return types.Any(t => t == next);
+        }
+
         private void Skip(int step = 1) => _position += step;
+
+        private Token Consume()
+        {
+            var result = Peek();
+            Skip();
+            return result;
+        }
+
     }
 }
