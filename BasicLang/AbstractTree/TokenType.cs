@@ -34,8 +34,11 @@
 
         EoL,
         EoF,
-
+        //Begining of keywords
         Program,
+        Or,
+        Xor,
+        And,
         Let,
         Goto,
         Print,
@@ -58,5 +61,6 @@
         Declare,
         Dim,
         End,
+        //End of keywords
     }
 }

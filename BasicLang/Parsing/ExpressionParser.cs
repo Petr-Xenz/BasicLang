@@ -35,20 +35,44 @@ namespace BasicLang.Parsing
 
             private IExpression ParseOr(Token current)
             {
-                //TODO
-                return ParseXor(current);
+                var left = ParseXor(current);
+
+                while (Match(Or))
+                {
+                    Skip(2);
+                    var right = ParseXor(Peek());
+                    return new OrExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition));
+                }
+
+                return left;
             }
 
             private IExpression ParseXor(Token current)
             {
-                //TODO
-                return ParseAnd(current);
+                var left = ParseAnd(current);
+
+                while (Match(Xor))
+                {
+                    Skip(2);
+                    var right = ParseAnd(Peek());
+                    return new XorExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition));
+                }
+
+                return left;
             }
 
             private IExpression ParseAnd(Token current)
             {
-                //TODO
-                return ParseEquality(current);
+                var left = ParseEquality(current);
+
+                while (Match(And))
+                {
+                    Skip(2);
+                    var right = ParseEquality(Peek());
+                    return new AndExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition));
+                }
+
+                return left;
             }
 
             private IExpression ParseEquality(Token current)

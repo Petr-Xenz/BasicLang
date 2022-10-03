@@ -52,6 +52,20 @@ public class ExpressionParserTests
         SimpleBinaryExpressionTemplate<GreaterThanOrEqualExpressions, NumberExpression<long>, long>("let foo = 4 >= 1", "foo", 4L, 1L);
 
     [TestMethod]
+    public void IntegerOrExpression() =>
+        SimpleBinaryExpressionTemplate<OrExpression, NumberExpression<long>, long>("let foo = 4 or 1", "foo", 4L, 1L);
+
+
+    [TestMethod]
+    public void IntegerXorExpression() =>
+        SimpleBinaryExpressionTemplate<XorExpression, NumberExpression<long>, long>("let foo = 4 xor 1", "foo", 4L, 1L);
+
+
+    [TestMethod]
+    public void IntegerAndExpression() =>
+        SimpleBinaryExpressionTemplate<AndExpression, NumberExpression<long>, long>("let foo = 4 and 1", "foo", 4L, 1L);
+
+    [TestMethod]
     public void MathExpressionsOrder()
     {
         var source = "let foo = 42 + 1 * 3";
