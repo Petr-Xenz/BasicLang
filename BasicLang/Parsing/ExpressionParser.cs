@@ -53,14 +53,44 @@ namespace BasicLang.Parsing
 
             private IExpression ParseEquality(Token current)
             {
-                //TODO
-                return ParseComparsion(current);
+                var left = ParseComparsion(current);
+
+                while (Match(Equal, NotEqual))
+                {
+                    var op = PeekNext();
+                    Skip(2);
+                    var right = ParseComparsion(Peek());
+                    return op.Type switch
+                    {
+                        Equal => new EqualityExpressions(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        NotEqual => new NonEqualityExpressions(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        _ => throw new ProgramException(op.Type.ToString(), op.SourcePosition)
+                    };
+                }
+
+                return left;
             }
 
             private IExpression ParseComparsion(Token current)
             {
-                //TODO
-                return ParseTerm(current);
+                var left = ParseTerm(current);
+
+                while (Match(LessThen, LessThenOrEqual, GreaterThen, GreaterThenOrEqual))
+                {
+                    var op = PeekNext();
+                    Skip(2);
+                    var right = ParseTerm(Peek());
+                    return op.Type switch
+                    {
+                        LessThen => new LessThanExpressions(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        LessThenOrEqual => new LessThanOrEqualExpressions(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        GreaterThen => new GreaterThanExpressions(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        GreaterThenOrEqual => new GreaterThanOrEqualExpressions(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
+                        _ => throw new ProgramException(op.Type.ToString(), op.SourcePosition)
+                    };
+                }
+
+                return left;
             }
 
             private IExpression ParseTerm(Token current)
