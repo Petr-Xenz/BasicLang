@@ -48,7 +48,7 @@ public class ExpressionParserTests
         SimpleBinaryExpressionTemplate<GreaterThanExpressions, NumberExpression<long>, long>("let foo = 4 > 1", "foo", 4L, 1L);
 
     [TestMethod]
-    public void IntegerGreaterThanOeEqualExpression() =>
+    public void IntegerGreaterThanOrEqualExpression() =>
         SimpleBinaryExpressionTemplate<GreaterThanOrEqualExpressions, NumberExpression<long>, long>("let foo = 4 >= 1", "foo", 4L, 1L);
 
     [TestMethod]
