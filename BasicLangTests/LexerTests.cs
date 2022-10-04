@@ -141,8 +141,8 @@ public partial class LexerTests
 
         var expected = new Token[]
         {
-        new Token(TokenType.String, "=(),;:", new SourcePosition(0, 1, 1, 8)),
-        new Token(EoF, "", new SourcePosition(8, 1, 9, 0)),
+            new Token(TokenType.String, "\"=(),;:\"", new SourcePosition(0, 1, 1, 8)),
+            new Token(EoF, "", new SourcePosition(8, 1, 9, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result);
