@@ -65,7 +65,7 @@ internal class Lexer
                 _columnPosition++;
                 MoveWhile(c => c != '"' || c != '\n' || c != '\r');
                 // TODO error reporting
-                yield return new Token(TokenType.String, _source[(startingPosition + 1)..(_position - 1)], new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition));
+                yield return new Token(TokenType.String, _source[startingPosition.._position], new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition));
             }
             else if (Peek() == '!')
             {
@@ -73,7 +73,7 @@ internal class Lexer
                 var startingColumn = _columnPosition;
                 _position++;
                 _columnPosition++;
-                MoveWhile(c => !(c == '\n' || c == '\r'));
+                MoveWhile(c => c is not ('\n' or '\r'));
                 yield return new Token(Comment, _source[(startingPosition + 1).._position], new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition));
             }
             else if (Peek() == '=' && PeekNext() == '=')

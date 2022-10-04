@@ -117,6 +117,29 @@ public class ExpressionParserTests
         Assert.AreEqual("1", innerExpression?.Value);
     }
 
+    [TestMethod]
+    public void StringExpression()
+    {
+        var source = """let foo = "foo" """;
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var variableDeclarationStatement = tree.RootStatement as VariableDeclarationStatement;
+        Assert.IsNotNull(variableDeclarationStatement, nameof(variableDeclarationStatement));
+
+        var assignmentExpression = variableDeclarationStatement.Expression.Child as AssignmentExpression;
+        Assert.IsNotNull(assignmentExpression, nameof(assignmentExpression));
+
+        var variableExpression = assignmentExpression.Left as VariableExpression;
+        Assert.AreEqual("foo", variableExpression?.Name);
+
+        var stringExpression = assignmentExpression.Right as StringExpression;
+        Assert.IsNotNull(stringExpression);
+
+        Assert.AreEqual("foo", stringExpression.LiteralValue);
+    }
+
     private void SimpleBinaryExpressionTemplate<T, U, N>(string source, string varName, object left, object right)
         where T : BinaryExpression
         where U : NumberExpression<N>

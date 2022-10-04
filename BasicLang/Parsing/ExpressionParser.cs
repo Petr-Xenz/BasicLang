@@ -161,7 +161,7 @@ internal partial class Parser
         {
             if (current.Type == Not)
             {
-                Skip();
+            Skip();
                 var next = Peek();
                 return new NotExpression(ParsePrimary(next), GetSourcePositionFromRange(current, next));
             }
@@ -174,6 +174,7 @@ internal partial class Parser
             {
                 Number => ParseNumber(),
                 Identifier => ParseIdentifier(),
+                TokenType.String => new StringExpression(current),
                 _ => throw new ProgramException($"Unexpected token {current.Type}", current.SourcePosition),
             };
 
