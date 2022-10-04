@@ -159,7 +159,12 @@ internal partial class Parser
 
         private IExpression ParseUnary(Token current)
         {
-            //TODO
+            if (current.Type == Not)
+            {
+                Skip();
+                var next = Peek();
+                return new NotExpression(ParsePrimary(next), GetSourcePositionFromRange(current, next));
+            }
             return ParsePrimary(current);
         }
 
@@ -188,7 +193,7 @@ internal partial class Parser
         }
 
         private bool Match(TokenType type) => _parser.Match(type);
-
+        
         private bool Match(params TokenType[] types) => _parser.Match(types);
 
         private void Skip(int step = 1) => _parser.Skip(step);
@@ -200,6 +205,9 @@ internal partial class Parser
         private Token PeekNext() => _parser.PeekNext();
 
         private SourcePosition GetSourcePositionFromRange(SourcePosition start, SourcePosition end) =>
+            _parser.GetSourcePositionFromRange(start, end);
+
+        private SourcePosition GetSourcePositionFromRange(ICodeElement start, ICodeElement end) =>
             _parser.GetSourcePositionFromRange(start, end);
 
     }

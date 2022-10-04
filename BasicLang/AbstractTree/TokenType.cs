@@ -39,6 +39,7 @@ internal enum TokenType
     Or,
     Xor,
     And,
+    Not,
     Let,
     Goto,
     Print,
