@@ -1,11 +1,10 @@
-﻿namespace BasicLang.AbstractTree
+﻿namespace BasicLang.AbstractTree;
+
+internal interface IStatement : ICodeElement
 {
-    internal interface IStatement : ICodeElement
-    {
-        SourcePosition GeneralErrorPosition { get; }
+    SourcePosition GeneralErrorPosition { get; }
 
-        string Value { get; }
+    string Value { get; }
 
-        IEnumerable<IStatement> Children { get; }
-    }
+    IEnumerable<IStatement> Children { get; }
 }

@@ -1,7 +1,6 @@
-﻿namespace BasicLang.AbstractTree
+﻿namespace BasicLang.AbstractTree;
+
+internal interface ICodeElement
 {
-    internal interface ICodeElement
-    {
-        SourcePosition SourcePosition { get; }
-    }
+    SourcePosition SourcePosition { get; }
 }

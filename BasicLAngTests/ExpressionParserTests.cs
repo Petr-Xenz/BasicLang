@@ -2,6 +2,7 @@
 using BasicLang.AbstractTree.Statements;
 
 namespace BasicLang.Tests;
+
 [TestClass]
 public class ExpressionParserTests
 {
@@ -24,7 +25,7 @@ public class ExpressionParserTests
         SimpleBinaryExpressionTemplate<DivisionExpression, NumberExpression<long>, long>("let foo = 4 / 1", "foo", 4L, 1L);
 
     [TestMethod]
-    public void IntegerMultiplication() => 
+    public void IntegerMultiplication() =>
             SimpleBinaryExpressionTemplate<MultiplicationExpression, NumberExpression<long>, long>("let foo = 4 * 1", "foo", 4L, 1L);
 
     [TestMethod]

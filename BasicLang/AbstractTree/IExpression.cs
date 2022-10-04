@@ -1,7 +1,6 @@
-﻿namespace BasicLang.AbstractTree
+﻿namespace BasicLang.AbstractTree;
+
+internal interface IExpression : IStatement
 {
-    internal interface IExpression : IStatement
-    {
-        new IEnumerable<IExpression> Children { get; }
-    }
+    new IEnumerable<IExpression> Children { get; }
 }

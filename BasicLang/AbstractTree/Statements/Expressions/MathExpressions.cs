@@ -1,42 +1,41 @@
-﻿namespace BasicLang.AbstractTree.Statements.Expressions
+﻿namespace BasicLang.AbstractTree.Statements.Expressions;
+
+internal class AdditionExpression : BinaryExpression
 {
-    internal class AdditionExpression : BinaryExpression
+    public AdditionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
     {
-        public AdditionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-        {
 
-        }
-
-        protected override string Delimeter => "+";
     }
 
-    internal class SubtractionExpression : BinaryExpression
+    protected override string Delimeter => "+";
+}
+
+internal class SubtractionExpression : BinaryExpression
+{
+    public SubtractionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
     {
-        public SubtractionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-        {
 
-        }
-
-        protected override string Delimeter => "-";
     }
 
-    internal class MultiplicationExpression : BinaryExpression
+    protected override string Delimeter => "-";
+}
+
+internal class MultiplicationExpression : BinaryExpression
+{
+    public MultiplicationExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
     {
-        public MultiplicationExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-        {
 
-        }
-
-        protected override string Delimeter => "*";
     }
 
-    internal class DivisionExpression : BinaryExpression
+    protected override string Delimeter => "*";
+}
+
+internal class DivisionExpression : BinaryExpression
+{
+    public DivisionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
     {
-        public DivisionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-        {
 
-        }
-
-        protected override string Delimeter => "/";
     }
+
+    protected override string Delimeter => "/";
 }

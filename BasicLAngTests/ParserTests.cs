@@ -73,7 +73,7 @@ public class ParserTests
         var tree = new Parser(tokens, source).Parse();
         var root = tree.RootStatement as ProgramStatement;
         Assert.IsNotNull(root);
-        
+
         var gotoStatement = root.Children.Single() as GotoStatement;
         Assert.IsNotNull(gotoStatement);
         Assert.AreEqual("10", gotoStatement.LineValue);

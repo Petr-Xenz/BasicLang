@@ -16,20 +16,20 @@ internal class Lexer
     private static int _newLineLength = Environment.NewLine.Length;
 
     private static IReadOnlyDictionary<char, TokenType> _simpleOperatorsToType = new Dictionary<char, TokenType>
-    {
-        { '<', LessThen },
-        { '>', GreaterThen },
-        { '+', Addition },
-        { '-', Subtraction },
-        { '*', Multiplication },
-        { '/', Division },
-        { '=', Assignment},
-        { '(', OpenParenthesis },
-        { ')', CloseParenthesis },
-        { ',', Comma},
-        { ';', Semicolon},
-        { ':', Colon },
-    };
+{
+    { '<', LessThen },
+    { '>', GreaterThen },
+    { '+', Addition },
+    { '-', Subtraction },
+    { '*', Multiplication },
+    { '/', Division },
+    { '=', Assignment},
+    { '(', OpenParenthesis },
+    { ')', CloseParenthesis },
+    { ',', Comma},
+    { ';', Semicolon},
+    { ':', Colon },
+};
 
     private static IReadOnlyDictionary<string, TokenType> _keywordsToTokens = Enumerable.Range((int)Program, End - Program + 1)
         .Select(i => (TokenType)i)
