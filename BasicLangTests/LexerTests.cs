@@ -167,15 +167,19 @@ public partial class LexerTests
     [TestMethod]
     public void TwoLineOfCommentsLexing()
     {
-        var source = $"! =(),;:{Environment.NewLine}! =(),;:";
+        var source = 
+           """
+           ! =(),;:
+           ! =(),;:
+           """;
         var result = new Lexer(source).Lex().ToArray();
 
         var expected = new Token[]
         {
-        new Token(Comment, " =(),;:", new SourcePosition(0,1, 1, 8)),
-        new Token(EoL, Environment.NewLine, new SourcePosition(8, 1, 9, Environment.NewLine.Length)),
-        new Token(Comment, " =(),;:", new SourcePosition(10, 2, 1, 8)),
-        new Token(EoF, "", new SourcePosition(18, 2, 9, 0)),
+            new Token(Comment, " =(),;:", new SourcePosition(0,1, 1, 8)),
+            new Token(EoL, Environment.NewLine, new SourcePosition(8, 1, 9, Environment.NewLine.Length)),
+            new Token(Comment, " =(),;:", new SourcePosition(10, 2, 1, 8)),
+            new Token(EoF, "", new SourcePosition(18, 2, 9, 0)),
         };
 
         CollectionAssert.AreEqual(expected, result);
