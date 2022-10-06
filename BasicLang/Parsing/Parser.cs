@@ -39,11 +39,30 @@ internal partial class Parser
                 Program => ParseProgramDeclaration(current),
                 Let => ParseLetVariableDeclarationExpression(current),
                 Goto => ParseGoto(current),
+                Identifier => ParseIdentifier(current),
                 _ => ParseUnknown(current),
             };
         }
 
         return new ErrorStatement(string.Empty, default);
+    }
+
+    private IStatement ParseIdentifier(Token current)
+    {
+        if (PeekNext().Type == Colon)
+        {
+            var colon = Consume();
+            if (_position > 0 && _tokens[_position - 1].Type != EoL)
+            {
+                _parsingErrors.Add(new ProgramError("A line label must be on the beginning of a line", GetSourcePositionFromRange(current, colon)));
+            }
+
+            return new LabelStatement(current.Value + colon.Value, current.Value, GetSourcePositionFromRange(current, colon));
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
     }
 
     private IStatement ParseGoto(Token current)

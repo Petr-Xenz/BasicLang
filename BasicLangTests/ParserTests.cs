@@ -32,6 +32,19 @@ public class ParserTests
     }
 
     [TestMethod]
+    public void LabelStatement()
+    {
+        var source = "label:";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var labelStatement = tree.RootStatement as LabelStatement;
+        Assert.IsNotNull(labelStatement);
+        Assert.AreEqual("label", labelStatement.LineValue);
+    }
+
+    [TestMethod]
     public void VariableDeclarationStatementPositiveIntegerLiteral()
     {
         var source = "let foo = 42";
