@@ -39,12 +39,35 @@ internal partial class Parser
                 Program => ParseProgramDeclaration(current),
                 Let => ParseLetVariableDeclarationExpression(current),
                 Goto => ParseGoto(current),
+                Print => ParsePrint(current),
                 Identifier => ParseIdentifier(current),
                 _ => ParseUnknown(current),
             };
         }
 
         return new ErrorStatement(string.Empty, default);
+    }
+
+    private IStatement ParsePrint(Token current)
+    {
+        Skip();
+        var expressions = new List<IExpression>
+        {
+            _expressionParser.Parse(Peek())
+        };
+
+        while (Match(Comma, Semicolon))
+        {
+            Skip(2);
+            expressions.Add(_expressionParser.Parse(Peek()));
+        }
+
+        if (expressions.Count == 0)
+        {
+            _parsingErrors.Add(new ProgramError("Print statement should have atlest one expression", current.SourcePosition));
+        }
+
+        return new PrintStatement(expressions, GetSourcePositionFromRange(current, Peek()));
     }
 
     private IStatement ParseIdentifier(Token current)
@@ -192,5 +215,4 @@ internal partial class Parser
         Skip();
         return result;
     }
-
 }
