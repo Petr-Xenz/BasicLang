@@ -1,6 +1,5 @@
 ﻿using BasicLang.AbstractTree;
 using BasicLang.AbstractTree.Statements;
-using System.IO;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Parsing;
@@ -50,16 +49,16 @@ internal partial class Parser
     private IStatement ParseGoto(Token current)
     {
         MovePosition();
-        var lineNumber = Peek();
+        var lineLabel = Peek();
 
-        if (lineNumber.Type == Number)
+        if (lineLabel.Type == Number || lineLabel.Type == Identifier)
         {
             MovePosition();
-            return new GotoStatement(lineNumber.Value, GetSourcePositionFromRange(current, lineNumber));
+            return new GotoStatement(lineLabel.Value, GetSourcePositionFromRange(current, lineLabel));
         }
         else
         {
-            throw new ProgramException("Line number expected", lineNumber.SourcePosition);
+            throw new ProgramException("Line number expected", lineLabel.SourcePosition);
         }
     }
 
