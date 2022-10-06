@@ -1,6 +1,5 @@
 ﻿using BasicLang.AbstractTree.Statements;
 using BasicLang.AbstractTree.Statements.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BasicLang.Tests;
 
 [TestClass]

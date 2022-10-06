@@ -161,7 +161,7 @@ internal partial class Parser
         {
             if (current.Type == Not)
             {
-            Skip();
+                Skip();
                 var next = Peek();
                 return new NotExpression(ParsePrimary(next), GetSourcePositionFromRange(current, next));
             }
@@ -194,7 +194,7 @@ internal partial class Parser
         }
 
         private bool Match(TokenType type) => _parser.Match(type);
-        
+
         private bool Match(params TokenType[] types) => _parser.Match(types);
 
         private void Skip(int step = 1) => _parser.Skip(step);

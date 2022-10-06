@@ -53,7 +53,7 @@ internal class NotExpression : IExpression
     }
 
     public SourcePosition GeneralErrorPosition => SourcePosition;
-    
+
     public string Value => $"not {Inner.Value}";
 
     public SourcePosition SourcePosition { get; }
