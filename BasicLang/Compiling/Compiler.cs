@@ -7,6 +7,8 @@ using static System.Reflection.Emit.OpCodes;
 namespace BasicLang.Compiling;
 internal class Compiler
 {
+    public const int HeaderSize = 32;
+
     private readonly ParseSyntaxTree _tree;
     private readonly Dictionary<string, int> _labelsLocations = new();
     private readonly Dictionary<int, int> _sourceToOpCodeLocation = new();
@@ -21,7 +23,7 @@ internal class Compiler
 
     public byte[] Compile()
     {
-        var header = new List<byte>(32);
+        var header = new byte[HeaderSize];
         var instructions = CompileNode(_tree.RootStatement);
         return header.Concat(instructions).Concat(_constants).ToArray();
     }

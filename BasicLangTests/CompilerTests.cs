@@ -14,14 +14,16 @@ public class CompilerTests
         var tree = new Parser(tokens, source).Parse();
         var opcodes = new Compiler(tree).Compile();
 
-        var expected = new byte[]
-        {
-            (byte)Ldc_I8.Value,
-            5, 0, 0, 0, 0, 0, 0, 0,
-            (byte)Call.Value,
-            (byte)SystemCalls.WriteLine,
-            1,
-        };
+        var expected = new byte[Compiler.HeaderSize]
+            .Concat(new byte[]
+            {
+                (byte)Ldc_I8.Value,
+                5, 0, 0, 0, 0, 0, 0, 0,
+                (byte)Call.Value,
+                (byte)SystemCalls.WriteLine,
+                1,
+            })
+            .ToArray();
 
         CollectionAssert.AreEquivalent(expected, opcodes);
     }

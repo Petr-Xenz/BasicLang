@@ -23,5 +23,9 @@
 	<ItemGroup>
 	  <EditorConfigFiles Remove="C:\Users\petrx\source\repos\Petr-Xenz\BasicLang\BasicLang\Parsing\.editorconfig" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Runtime\" />
+	</ItemGroup>
 	
 </Project>
