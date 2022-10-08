@@ -40,12 +40,36 @@ internal partial class Parser
                 Let => ParseLetVariableDeclarationExpression(current),
                 Goto => ParseGoto(current),
                 Print => ParsePrint(current),
+                If => ParseIf(current),
                 Identifier => ParseIdentifier(current),
                 _ => ParseUnknown(current),
             };
         }
 
         return new ErrorStatement(string.Empty, default);
+    }
+
+    private IStatement ParseIf(Token current)
+    {
+        Skip(); //if
+        var condition = _expressionParser.Parse(Peek());
+
+        if (!Match(Then))
+        {
+            throw new ProgramException("Then keyword expected", PeekNext().SourcePosition);
+        }
+
+        Skip(2); //expression + then
+
+        var onTrueStatement = ParseStatement();
+        IStatement? onFalseStatement = null;
+        if (Match(Else))
+        {
+            Skip(2);
+            onFalseStatement = ParseStatement();
+        }
+
+        return new IfStatement(condition, onTrueStatement, onFalseStatement, GetSourcePositionFromRange(current, Peek()));
     }
 
     private IStatement ParsePrint(Token current)
@@ -135,7 +159,7 @@ internal partial class Parser
 
     private IStatement ParseUnknown(Token token)
     {
-        var errorText = $"Unknown token at {token.SourcePosition}";
+        var errorText = $"Unknown token at {token.SourcePosition}: {token.Value}";
         AddError(errorText, token.SourcePosition);
         var result = new ErrorStatement(errorText, token.SourcePosition);
 

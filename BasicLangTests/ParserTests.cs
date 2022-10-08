@@ -118,6 +118,68 @@ public class ParserTests
     }
 
     [TestMethod]
+    public void IfStatement()
+    {
+        var source = "If 1 Then print 5";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var ifStatement = tree.RootStatement as IfStatement;
+        Assert.IsNotNull(ifStatement);
+        var condition = ifStatement.Condition as IntegerLiteralExpression;
+        Assert.IsNotNull(condition);
+
+        Assert.AreEqual(1L, condition.LiteralValue);
+
+        var printStatement = ifStatement.OnTrue as PrintStatement;
+        Assert.IsNotNull(printStatement);
+        Assert.AreEqual("5", (printStatement.Expressions.Single() as IntegerLiteralExpression)?.Value);
+    }
+
+    [TestMethod]
+    public void IfElseStatement()
+    {
+        var source = "If 1 Then print 5 else print 6";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var ifStatement = tree.RootStatement as IfStatement;
+        Assert.IsNotNull(ifStatement);
+        var condition = ifStatement.Condition as IntegerLiteralExpression;
+        Assert.IsNotNull(condition);
+
+        Assert.AreEqual(1L, condition.LiteralValue);
+
+        var onTrueStatement = ifStatement.OnTrue as PrintStatement;
+        Assert.IsNotNull(onTrueStatement);
+        Assert.AreEqual("5", (onTrueStatement.Expressions.Single() as IntegerLiteralExpression)?.Value);
+
+        var onFalseStatement = ifStatement.OnFalse as PrintStatement;
+        Assert.IsNotNull(onFalseStatement);
+        Assert.AreEqual("6", (onFalseStatement.Expressions.Single() as IntegerLiteralExpression)?.Value);
+    }
+
+    [TestMethod]
+    public void IfStatementComplexCondition()
+    {
+        var source = "If 1 + 1 Then print 5";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var ifStatement = tree.RootStatement as IfStatement;
+        Assert.IsNotNull(ifStatement);
+        var condition = ifStatement.Condition as AdditionExpression;
+        Assert.IsNotNull(condition);
+
+        var printStatement = ifStatement.OnTrue as PrintStatement;
+        Assert.IsNotNull(printStatement);
+        Assert.AreEqual("5", (printStatement.Expressions.Single() as IntegerLiteralExpression)?.Value);
+    }
+
+    [TestMethod]
     public void ProgramStatement()
     {
         var source = """
