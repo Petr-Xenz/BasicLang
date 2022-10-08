@@ -34,8 +34,18 @@ internal class Compiler
         {
             PrintStatement print => CompilePrintStatement(print),
             IntegerLiteralExpression integer => CompileIntegerLiteral(integer),
+            AdditionExpression addition => CompileAdd(addition),
             _ => throw new NotSupportedException(statement.GetType().Name),
         };
+    }
+
+    private IEnumerable<byte> CompileAdd(AdditionExpression addition)
+    {
+        var left = CompileNode(addition.Left);
+        var right = CompileNode(addition.Right);
+        _stackDepth -= 1;
+
+        return left.Concat(right).Append((byte)Add.Value);
     }
 
     private IEnumerable<byte> CompileIntegerLiteral(IntegerLiteralExpression integer)

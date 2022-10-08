@@ -27,4 +27,29 @@ public class CompilerTests
 
         CollectionAssert.AreEquivalent(expected, opcodes);
     }
+
+    [TestMethod]
+    public void CompilingPrintAdditionOfIntegerLiterals()
+    {
+        var source = "print 5 + 5";
+        var tokens = new Lexer(source).Lex();
+        var tree = new Parser(tokens, source).Parse();
+        var opcodes = new Compiler(tree).Compile();
+
+        var expected = new byte[Compiler.HeaderSize]
+            .Concat(new byte[]
+            {
+                (byte)Ldc_I8.Value,
+                5, 0, 0, 0, 0, 0, 0, 0,
+                (byte)Ldc_I8.Value,
+                5, 0, 0, 0, 0, 0, 0, 0,
+                (byte)Add.Value,
+                (byte)Call.Value,
+                (byte)SystemCalls.WriteLine,
+                1,
+            })
+            .ToArray();
+
+        CollectionAssert.AreEquivalent(expected, opcodes);
+    }
 }

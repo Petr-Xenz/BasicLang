@@ -26,9 +26,24 @@ internal class BasicRuntime
             {
                 33 => ExecutePutIntegerOnStack(),
                 40 => ExecuteMethodCall(),
+                88 => ExecuteAdd(),
                 _ => throw new InvalidOperationException($"Unknown opcode: {_program[_position]}"),
             };
         }
+    }
+
+    private Unit ExecuteAdd()
+    {
+        var right = _stack.Pop();
+        var left = _stack.Pop();
+
+        //TODO type check
+        if (left is long l && right is long r)
+        {
+            _stack.Push(l + r);
+        }
+        _position++;
+        return Unit.Instance;
     }
 
     private Unit ExecutePutIntegerOnStack()
