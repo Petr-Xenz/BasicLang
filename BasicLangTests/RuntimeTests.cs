@@ -32,6 +32,22 @@ public class RuntimeTests
     }
 
     [TestMethod]
+    public void PrintMultipleIntegersLiteral()
+    {
+        var source = "print 5, 6";
+        var tokens = new Lexer(source).Lex();
+        var tree = new Parser(tokens, source).Parse();
+        var opcodes = new Compiler(tree).Compile();
+
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        new BasicRuntime(opcodes).Execute();
+
+        Assert.AreEqual("56\r\n", writer.ToString());
+    }
+
+    [TestMethod]
     public void PrintAdditionOfIntegerLiterals()
     {
         var source = "print 5 + 5";

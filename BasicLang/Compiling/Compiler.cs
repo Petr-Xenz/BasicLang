@@ -58,6 +58,7 @@ internal class Compiler
     private IEnumerable<byte> CompilePrintStatement(PrintStatement print)
     {
         var result = print.Expressions
+            .Reverse()
             .Select(CompileNode)
             .SelectMany(op => op)
             .ToArray()
