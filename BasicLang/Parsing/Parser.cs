@@ -123,7 +123,7 @@ internal partial class Parser
         }
         else
         {
-            throw new NotImplementedException();
+            return ParseVariableAssignment(current);
         }
     }
 
@@ -192,6 +192,11 @@ internal partial class Parser
             throw new ProgramException("Identifier expected", Peek().SourcePosition);
         }
 
+        return ParseVariableAssignment(initial);
+    }
+
+    private IStatement ParseVariableAssignment(Token initial)
+    {
         var varToken = Peek();
         var expression = _expressionParser.Parse(varToken);
         return new VariableDeclarationStatement(new ExpressionStatement(expression), varToken.Value,
