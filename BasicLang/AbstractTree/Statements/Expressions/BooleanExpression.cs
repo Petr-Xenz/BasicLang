@@ -1,14 +1,15 @@
 ﻿namespace BasicLang.AbstractTree.Statements.Expressions;
 
-internal class VariableExpression : IExpression
+internal class BooleanExpression : IExpression
 {
-    public VariableExpression(string value, SourcePosition sourcePosition)
+    public BooleanExpression(string value, SourcePosition sourcePosition)
     {
         Value = value;
+        LiteralValue = bool.Parse(value);
         SourcePosition = sourcePosition;
     }
 
-    public string Name => Value;
+    public bool LiteralValue { get; }
 
     public IEnumerable<IExpression> Children => Enumerable.Empty<IExpression>();
 

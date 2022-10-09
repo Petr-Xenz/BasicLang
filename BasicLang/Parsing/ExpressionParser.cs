@@ -171,6 +171,7 @@ internal partial class Parser
             {
                 Number => ParseNumber(),
                 Identifier => ParseIdentifier(),
+                TokenType.Boolean => ParseBoolean(),
                 TokenType.String => new StringExpression(current),
                 _ => throw new ProgramException($"Unexpected token {current.Type}", current.SourcePosition),
             };
@@ -188,6 +189,9 @@ internal partial class Parser
             }
 
             IExpression ParseIdentifier() => new VariableExpression(current.Value, current.SourcePosition);
+
+            IExpression ParseBoolean() => new BooleanExpression(current.Value, current.SourcePosition);
+
         }
 
         private bool Match(TokenType type) => _parser.Match(type);
