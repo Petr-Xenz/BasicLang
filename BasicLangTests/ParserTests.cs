@@ -186,6 +186,36 @@ public class ParserTests
     }
 
     [TestMethod]
+    public void ElseIfStatement()
+    {
+        var source = "If 1 Then goto foo elseif 2 then print 6 elseif 3 then print 6";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var ifStatement = tree.RootStatement as IfStatement;
+        Assert.IsNotNull(ifStatement);
+        var condition = ifStatement.Condition as IntegerLiteralExpression;
+        Assert.IsNotNull(condition);
+
+        Assert.AreEqual(1L, condition.LiteralValue);
+
+        var onTrueStatement = ifStatement.OnTrue as GotoStatement;
+        Assert.IsNotNull(onTrueStatement);
+        Assert.AreEqual("foo", onTrueStatement.LineValue);
+
+        Assert.AreEqual(2, ifStatement.ElseIfStatements.Count());
+        foreach (var s in ifStatement.ElseIfStatements)
+        {
+            var c = s.Condition as IntegerLiteralExpression;
+            Assert.IsNotNull(c);
+            var elseIfStatement = s.OnTrue as PrintStatement;
+            Assert.IsNotNull(elseIfStatement);
+            Assert.AreEqual("6", (elseIfStatement.Expressions.Single() as IntegerLiteralExpression)?.Value);
+        }
+    }
+
+    [TestMethod]
     public void IfStatementComplexCondition()
     {
         var source = "If 1 + 1 Then print 5";

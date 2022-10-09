@@ -51,17 +51,16 @@ internal partial class Parser
 
     private IStatement ParseIf(Token current)
     {
-        Skip(); //if
-        var condition = _expressionParser.Parse(Peek());
+        var (condition, onTrueStatement) = ParseIfStatement();
 
-        if (!Match(Then))
+        var elseIfStatements = new List<ElseIfStatement>();
+        while (Match(ElseIf))
         {
-            throw new ProgramException("Then keyword expected", PeekNext().SourcePosition);
+            var start = Peek();
+            var (conditionElseIf, onTrueStatementElseIf) = ParseIfStatement();
+            elseIfStatements.Add(new ElseIfStatement(conditionElseIf, onTrueStatementElseIf, GetSourcePositionFromRange(start, Peek())));
         }
 
-        Skip(); //then
-
-        var onTrueStatement = ParseStatement();
         IStatement? onFalseStatement = null;
         if (Match(Else))
         {
@@ -69,7 +68,23 @@ internal partial class Parser
             onFalseStatement = ParseStatement();
         }
 
-        return new IfStatement(condition, onTrueStatement, onFalseStatement, GetSourcePositionFromRange(current, Peek()));
+        return new IfStatement(condition, onTrueStatement, onFalseStatement, elseIfStatements, GetSourcePositionFromRange(current, Peek()));
+
+        (IExpression condition, IStatement onTrueStatement) ParseIfStatement()
+        {
+            Skip(); //if
+            var condition = _expressionParser.Parse(Peek());
+            if (!Match(Then))
+            {
+                throw new ProgramException("Then keyword expected", PeekNext().SourcePosition);
+            }
+
+            Skip(); //then
+
+            var onTrueStatement = ParseStatement();
+
+            return (condition, onTrueStatement);
+        }
     }
 
     private IStatement ParsePrint(Token current)
