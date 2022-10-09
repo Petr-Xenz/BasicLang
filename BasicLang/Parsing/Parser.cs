@@ -59,13 +59,13 @@ internal partial class Parser
             throw new ProgramException("Then keyword expected", PeekNext().SourcePosition);
         }
 
-        Skip(2); //expression + then
+        Skip(); //then
 
         var onTrueStatement = ParseStatement();
         IStatement? onFalseStatement = null;
         if (Match(Else))
         {
-            Skip(2);
+            Skip(); //else
             onFalseStatement = ParseStatement();
         }
 
@@ -82,7 +82,7 @@ internal partial class Parser
 
         while (Match(Comma, Semicolon))
         {
-            Skip(2);
+            Skip();
             expressions.Add(_expressionParser.Parse(Peek()));
         }
 
@@ -114,12 +114,12 @@ internal partial class Parser
 
     private IStatement ParseGoto(Token current)
     {
-        MovePosition();
+        Skip();
         var lineLabel = Peek();
 
         if (lineLabel.Type == Number || lineLabel.Type == Identifier)
         {
-            MovePosition();
+            Skip();
             return new GotoStatement(lineLabel.Value, GetSourcePositionFromRange(current, lineLabel));
         }
         else
@@ -131,7 +131,8 @@ internal partial class Parser
     private IStatement ParseProgramDeclaration(Token initial)
     {
         var startPostion = initial.SourcePosition;
-        var programName = PeekNext();
+        Skip(); //program
+        var programName = Peek();
 
         if (!Match(Identifier))
         {
@@ -142,7 +143,7 @@ internal partial class Parser
             return new ErrorStatement(error, programName.SourcePosition);
         }
 
-        MovePosition(2);
+        Skip();
         var children = ParseUntilTokenMet(End);
 
         var endOfProgram = PeekNext();
@@ -163,28 +164,23 @@ internal partial class Parser
         AddError(errorText, token.SourcePosition);
         var result = new ErrorStatement(errorText, token.SourcePosition);
 
-        MovePosition();
+        Skip();
         return result;
     }
 
     private IStatement ParseLetVariableDeclarationExpression(Token initial)
     {
+        Skip(); //let
         if (!Match(Identifier))
         {
-            MovePosition();
+            Skip();
             throw new ProgramException("Identifier expected", Peek().SourcePosition);
         }
 
-        MovePosition();
         var varToken = Peek();
         var expression = _expressionParser.Parse(varToken);
         return new VariableDeclarationStatement(new ExpressionStatement(expression), varToken.Value,
             GetSourcePositionFromRange(initial, varToken), GetSourcePositionFromRange(initial, Peek()));
-    }
-
-    private void MovePosition(int step = 1)
-    {
-        _position += step;
     }
 
     private Token Peek()
@@ -204,9 +200,9 @@ internal partial class Parser
     private IEnumerable<IStatement> ParseUntilTokenMet(TokenType type)
     {
         var result = new List<IStatement>();
-        while (!Match(type))
+        while (!MatchNext(type))
         {
-            MovePosition();
+            Skip();
             result.Add(ParseStatement());
         }
         return result;
@@ -223,11 +219,13 @@ internal partial class Parser
     private SourcePosition GetSourcePositionFromRange(SourcePosition start, SourcePosition end) =>
         new(start.Offset, start.Line, start.Column, end.Offset - start.Offset + end.Length);
 
-    private bool Match(TokenType type) => PeekNext().Type == type;
+    private bool Match(TokenType type) => Peek().Type == type;
+    
+    private bool MatchNext(TokenType type) => PeekNext().Type == type;
 
     private bool Match(params TokenType[] types)
     {
-        var next = PeekNext().Type;
+        var next = Peek().Type;
         return types.Any(t => t == next);
     }
 

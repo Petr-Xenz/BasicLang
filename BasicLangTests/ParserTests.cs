@@ -162,6 +162,30 @@ public class ParserTests
     }
 
     [TestMethod]
+    public void IfElseStatement2()
+    {
+        var source = "If 1 Then goto foo else print 6";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var ifStatement = tree.RootStatement as IfStatement;
+        Assert.IsNotNull(ifStatement);
+        var condition = ifStatement.Condition as IntegerLiteralExpression;
+        Assert.IsNotNull(condition);
+
+        Assert.AreEqual(1L, condition.LiteralValue);
+
+        var onTrueStatement = ifStatement.OnTrue as GotoStatement;
+        Assert.IsNotNull(onTrueStatement);
+        Assert.AreEqual("foo", onTrueStatement.LineValue);
+
+        var onFalseStatement = ifStatement.OnFalse as PrintStatement;
+        Assert.IsNotNull(onFalseStatement);
+        Assert.AreEqual("6", (onFalseStatement.Expressions.Single() as IntegerLiteralExpression)?.Value);
+    }
+
+    [TestMethod]
     public void IfStatementComplexCondition()
     {
         var source = "If 1 + 1 Then print 5";
@@ -191,10 +215,10 @@ public class ParserTests
 
         var tree = new Parser(tokens, source).Parse();
         var root = tree.RootStatement as ProgramStatement;
-        Assert.IsNotNull(root);
+        Assert.IsNotNull(root, "root");
 
         var gotoStatement = root.Children.Single() as GotoStatement;
-        Assert.IsNotNull(gotoStatement);
+        Assert.IsNotNull(gotoStatement, "goto");
         Assert.AreEqual("10", gotoStatement.LineValue);
     }
 }

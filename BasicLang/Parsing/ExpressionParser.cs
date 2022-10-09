@@ -24,7 +24,7 @@ internal partial class Parser
 
             while (Match(Assignment))
             {
-                Skip(2);
+                Skip();
                 var right = ParseOr(Peek());
                 var assignment = new AssignmentExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition));
                 return assignment;
@@ -39,7 +39,7 @@ internal partial class Parser
 
             while (Match(Or))
             {
-                Skip(2);
+                Skip();
                 var right = ParseXor(Peek());
                 return new OrExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition));
             }
@@ -53,7 +53,7 @@ internal partial class Parser
 
             while (Match(Xor))
             {
-                Skip(2);
+                Skip();
                 var right = ParseAnd(Peek());
                 return new XorExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition));
             }
@@ -67,7 +67,7 @@ internal partial class Parser
 
             while (Match(And))
             {
-                Skip(2);
+                Skip();
                 var right = ParseEquality(Peek());
                 return new AndExpression(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition));
             }
@@ -81,8 +81,7 @@ internal partial class Parser
 
             while (Match(Equal, NotEqual))
             {
-                var op = PeekNext();
-                Skip(2);
+                var op = Consume();
                 var right = ParseComparsion(Peek());
                 return op.Type switch
                 {
@@ -101,8 +100,7 @@ internal partial class Parser
 
             while (Match(LessThen, LessThenOrEqual, GreaterThen, GreaterThenOrEqual))
             {
-                var op = PeekNext();
-                Skip(2);
+                var op = Consume();
                 var right = ParseTerm(Peek());
                 return op.Type switch
                 {
@@ -123,8 +121,7 @@ internal partial class Parser
 
             while (Match(Addition, Subtraction))
             {
-                var op = PeekNext();
-                Skip(2);
+                var op = Consume();
                 var right = ParseFactor(Peek());
                 return op.Type switch
                 {
@@ -143,8 +140,7 @@ internal partial class Parser
 
             while (Match(Multiplication, Division))
             {
-                var op = PeekNext();
-                Skip(2);
+                var op = Consume();
                 var right = ParseUnary(Peek());
                 return op.Type switch
                 {
@@ -170,6 +166,7 @@ internal partial class Parser
 
         private IExpression ParsePrimary(Token current)
         {
+            Skip();
             return current.Type switch
             {
                 Number => ParseNumber(),
