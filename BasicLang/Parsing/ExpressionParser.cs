@@ -173,6 +173,7 @@ internal partial class Parser
                 Identifier => ParseIdentifier(),
                 TokenType.Boolean => ParseBoolean(),
                 TokenType.String => new StringExpression(current),
+                OpenParenthesis => ParseGrouping(current),
                 _ => throw new ProgramException($"Unexpected token {current.Type}", current.SourcePosition),
             };
 
@@ -192,6 +193,17 @@ internal partial class Parser
 
             IExpression ParseBoolean() => new BooleanExpression(current.Value, current.SourcePosition);
 
+            IExpression ParseGrouping(Token starting)
+            {
+                var inner = Parse(Peek());
+                if (!Match(CloseParenthesis))
+                {
+                    throw new ProgramException(") expected", Peek().SourcePosition);
+                }
+                var last = Consume(); // )
+
+                return new GroupingExpression(inner, GetSourcePositionFromRange(starting, last));
+            }
         }
 
         private bool Match(TokenType type) => _parser.Match(type);

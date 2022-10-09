@@ -118,6 +118,33 @@ public class ExpressionParserTests
     }
 
     [TestMethod]
+    public void GroupingExpression()
+    {
+        var source = "let foo = (1 + 1)";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var variableDeclarationStatement = tree.RootStatement as VariableDeclarationStatement;
+        Assert.IsNotNull(variableDeclarationStatement, nameof(variableDeclarationStatement));
+
+        var assignmentExpression = variableDeclarationStatement.Expression.Child as AssignmentExpression;
+        Assert.IsNotNull(assignmentExpression, nameof(assignmentExpression));
+
+        var variableExpression = assignmentExpression.Left as VariableExpression;
+        Assert.AreEqual("foo", variableExpression?.Name);
+
+        var groupingExpression = assignmentExpression.Right as GroupingExpression;
+        Assert.IsNotNull(groupingExpression);
+
+        var innerExpression = groupingExpression.Inner as AdditionExpression;
+        Assert.IsNotNull(innerExpression);
+
+        Assert.AreEqual("1", innerExpression?.Left.Value);
+        Assert.AreEqual("1", innerExpression?.Right.Value);
+    }
+
+    [TestMethod]
     public void StringExpression()
     {
         var source = """let foo = "foo" """;
