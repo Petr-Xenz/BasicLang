@@ -141,17 +141,17 @@ public class ParserTests
     [TestMethod]
     public void IfStatement()
     {
-        var source = "If 1 Then print 5";
+        var source = "If true Then print 5";
         var tokens = new Lexer(source).Lex();
 
         var tree = new Parser(tokens, source).Parse();
 
         var ifStatement = tree.RootStatement as IfStatement;
         Assert.IsNotNull(ifStatement);
-        var condition = ifStatement.Condition as IntegerLiteralExpression;
+        var condition = ifStatement.Condition as BooleanExpression;
         Assert.IsNotNull(condition);
 
-        Assert.AreEqual(1L, condition.LiteralValue);
+        Assert.AreEqual(true, condition.LiteralValue);
 
         var printStatement = ifStatement.OnTrue as PrintStatement;
         Assert.IsNotNull(printStatement);

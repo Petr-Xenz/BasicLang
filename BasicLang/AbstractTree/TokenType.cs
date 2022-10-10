@@ -6,7 +6,6 @@ internal enum TokenType
     Unknown,
 
     Number,
-    Boolean,
     Identifier,
     String,
     Comment,
@@ -62,6 +61,8 @@ internal enum TokenType
     Def,
     Declare,
     Dim,
+    True,
+    False,
     End,
     //End of keywords
 }

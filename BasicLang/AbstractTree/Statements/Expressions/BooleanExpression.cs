@@ -2,10 +2,9 @@
 
 internal class BooleanExpression : IExpression
 {
-    public BooleanExpression(string value, SourcePosition sourcePosition)
+    public BooleanExpression(bool value, SourcePosition sourcePosition)
     {
-        Value = value;
-        LiteralValue = bool.Parse(value);
+        LiteralValue = value;
         SourcePosition = sourcePosition;
     }
 
@@ -15,7 +14,7 @@ internal class BooleanExpression : IExpression
 
     public SourcePosition GeneralErrorPosition => SourcePosition;
 
-    public string Value { get; }
+    public string Value => LiteralValue.ToString();
 
     public SourcePosition SourcePosition { get; }
 
