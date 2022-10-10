@@ -46,6 +46,7 @@ internal enum TokenType
     Input,
     For,
     To,
+    Step,
     Next,
     Do,
     While,

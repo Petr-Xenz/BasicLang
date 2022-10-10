@@ -1,5 +1,6 @@
 ﻿using BasicLang.AbstractTree;
 using BasicLang.AbstractTree.Statements;
+using BasicLang.AbstractTree.Statements.Expressions;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Parsing;
@@ -32,7 +33,10 @@ internal partial class Parser
         {
             var current = Peek();
             if (current.Type == EoL)
+            {
+                Skip();
                 continue;
+            }
 
             return current.Type switch
             {
@@ -41,6 +45,7 @@ internal partial class Parser
                 Goto => ParseGoto(current),
                 Print => ParsePrint(current),
                 If => ParseIf(current),
+                For => ParseFor(current),
                 Identifier => ParseIdentifier(current),
                 _ => ParseUnknown(current),
             };
@@ -48,6 +53,49 @@ internal partial class Parser
 
         return new ErrorStatement(string.Empty, default);
     }
+
+    private IStatement ParseFor(Token current)
+    {
+        Skip(); //for
+
+        ForCounterExpression? counter = null;
+        if (Match(Identifier))
+        {
+            counter = ParseCounter();
+        }
+        Expect(EoL);
+
+        var innerStatements = new List<IStatement>();
+        while (!Match(Next))
+        {
+            innerStatements.Add(ParseStatement());
+            SkipInsignificant();
+        }
+        var end = Consume(); //next
+
+        return new ForStatement(counter, innerStatements, GetSourcePositionFromRange(current, end));
+
+        ForCounterExpression ParseCounter()
+        {
+            var counterVariable = _expressionParser.Parse(Peek());
+            Expect(To);
+            Skip(); //to
+            var limit = _expressionParser.Parse(Peek());
+            var step = 1L;
+            if (Match(Step))
+            {
+                Skip(); //Step
+                Expect(Number);
+                if (Peek().Value.Contains('.'))
+                    throw new ProgramException("Integer literal expected", Peek());
+                step = long.Parse(Consume().Value);
+            }
+
+            return new ForCounterExpression(counterVariable, limit, step, GetSourcePositionFromRange(counterVariable, Peek()));
+
+        }
+    }
+
 
     private IStatement ParseIf(Token current)
     {
@@ -76,7 +124,7 @@ internal partial class Parser
             var condition = _expressionParser.Parse(Peek());
             if (!Match(Then))
             {
-                throw new ProgramException("Then keyword expected", PeekNext().SourcePosition);
+                throw new ProgramException("Then keyword expected", PeekNext());
             }
 
             Skip(); //then
@@ -240,8 +288,14 @@ internal partial class Parser
         new(start.Offset, start.Line, start.Column, end.Offset - start.Offset + end.Length);
 
     private bool Match(TokenType type) => Peek().Type == type;
-    
+
     private bool MatchNext(TokenType type) => PeekNext().Type == type;
+
+    private void Expect(TokenType type)
+    {
+        if (!Match(type))
+            throw new ProgramException($"Unexpected token {type}", Peek());
+    }
 
     private bool Match(params TokenType[] types)
     {
@@ -250,6 +304,17 @@ internal partial class Parser
     }
 
     private void Skip(int step = 1) => _position += step;
+
+    private int SkipInsignificant()
+    {
+        var steps = 0;
+        while(Peek().Type == EoL || Peek().Type == Comment)
+        {
+            steps++;
+            _position++;
+        }
+        return steps;
+    }
 
     private Token Consume()
     {

@@ -11,6 +11,11 @@ internal class ProgramException : Exception
         Position = position;
     }
 
+    public ProgramException(string? message, ICodeElement element) : base(message)
+    {
+        Position = element.SourcePosition;
+    }
+
     protected ProgramException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
