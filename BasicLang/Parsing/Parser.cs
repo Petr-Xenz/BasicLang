@@ -44,6 +44,7 @@ internal partial class Parser
                 Let => ParseLetVariableDeclarationExpression(current),
                 Goto => ParseGoto(current),
                 Print => ParsePrint(current),
+                Input => ParseInput(current),
                 If => ParseIf(current),
                 For => ParseFor(current),
                 Identifier => ParseIdentifier(current),
@@ -135,9 +136,22 @@ internal partial class Parser
         }
     }
 
+    private IStatement ParseInput(Token current)
+    {
+        Skip();
+        var expressions = ParseExpressionsList(current);
+        return new InputStatement(expressions, GetSourcePositionFromRange(current, Peek()));
+    }
+
     private IStatement ParsePrint(Token current)
     {
         Skip();
+        var expressions = ParseExpressionsList(current);
+        return new PrintStatement(expressions, GetSourcePositionFromRange(current, Peek()));
+    }
+
+    private IEnumerable<IExpression> ParseExpressionsList(Token initial)
+    {
         var expressions = new List<IExpression>
         {
             _expressionParser.Parse(Peek())
@@ -151,10 +165,10 @@ internal partial class Parser
 
         if (expressions.Count == 0)
         {
-            _parsingErrors.Add(new ProgramError("Print statement should have atlest one expression", current.SourcePosition));
+            _parsingErrors.Add(new ProgramError("Print statement should have atlest one expression", initial.SourcePosition));
         }
 
-        return new PrintStatement(expressions, GetSourcePositionFromRange(current, Peek()));
+        return expressions;
     }
 
     private IStatement ParseIdentifier(Token current)

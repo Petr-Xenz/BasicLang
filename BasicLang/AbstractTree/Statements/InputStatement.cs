@@ -1,8 +1,8 @@
 ﻿namespace BasicLang.AbstractTree.Statements;
 
-internal class PrintStatement : IStatement
+internal class InputStatement : IStatement
 {
-    public PrintStatement(IEnumerable<IExpression> children, SourcePosition sourcePosition)
+    public InputStatement(IEnumerable<IExpression> children, SourcePosition sourcePosition)
     {
         Expressions = children;
         SourcePosition = sourcePosition;
@@ -10,7 +10,7 @@ internal class PrintStatement : IStatement
 
     public SourcePosition GeneralErrorPosition => SourcePosition;
 
-    public string Value => "print " + Expressions.Select(c => c.Value).Aggregate((p, c) => $"{p}, {c}");
+    public string Value => "read " + Expressions.Select(c => c.Value).Aggregate((p, c) => $"{p}, {c}");
 
     public IEnumerable<IStatement> Children => Expressions;
 
