@@ -47,12 +47,23 @@ internal partial class Parser
                 Input => ParseInput(current),
                 If => ParseIf(current),
                 For => ParseFor(current),
+                While => ParseWhile(current),
                 Identifier => ParseIdentifier(current),
                 _ => ParseUnknown(current),
             };
         }
 
         return new ErrorStatement(string.Empty, default);
+    }
+
+    private IStatement ParseWhile(Token current)
+    {
+        Skip(); //for
+        var condition = _expressionParser.Parse(Peek());
+        Expect(EoL);
+        var (innerStatements, end) = ParseStatementsUntilTokenIsMet(Loop);
+
+        return new WhileStatement(condition, innerStatements, GetSourcePositionFromRange(current, end));
     }
 
     private IStatement ParseFor(Token current)
@@ -66,13 +77,7 @@ internal partial class Parser
         }
         Expect(EoL);
 
-        var innerStatements = new List<IStatement>();
-        while (!Match(Next))
-        {
-            innerStatements.Add(ParseStatement());
-            SkipInsignificant();
-        }
-        var end = Consume(); //next
+        var (innerStatements, end) = ParseStatementsUntilTokenIsMet(Next);
 
         return new ForStatement(counter, innerStatements, GetSourcePositionFromRange(current, end));
 
@@ -97,7 +102,18 @@ internal partial class Parser
         }
     }
 
+    private (IEnumerable<IStatement> statements, Token end) ParseStatementsUntilTokenIsMet(TokenType type)
+    {
+        var result = new List<IStatement>();
+        while (!Match(type))
+        {
+            result.Add(ParseStatement());
+            SkipInsignificant();
+        }
+        var end = Consume(); //type
 
+        return (result, end);
+    }
     private IStatement ParseIf(Token current)
     {
         var (condition, onTrueStatement) = ParseIfStatement();

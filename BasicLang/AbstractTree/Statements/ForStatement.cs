@@ -4,7 +4,7 @@ internal class ForStatement : IStatement
 {
     public ForStatement(ForCounterExpression? counter, IEnumerable<IStatement> innerStatements, SourcePosition sourcePosition)
     {
-        GeneralErrorPosition = new SourcePosition(sourcePosition.Offset, sourcePosition.Line, sourcePosition.Column, 2);
+        GeneralErrorPosition = new SourcePosition(sourcePosition.Offset, sourcePosition.Line, sourcePosition.Column, 3);
         Value = $"";//TODO
         Counter = counter;
         InnerStatements = innerStatements;

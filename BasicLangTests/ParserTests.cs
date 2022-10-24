@@ -358,6 +358,28 @@ public class ParserTests
     }
 
     [TestMethod]
+    public void WhileStatement()
+    {
+        var source =
+                """
+                while true
+                    x = 5
+                    y = 6
+                loop
+                """;
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var whileStatement = tree.RootStatement as WhileStatement;
+        Assert.IsNotNull(whileStatement);
+
+        var condition = whileStatement.Condition as BooleanExpression;
+        Assert.AreEqual(true, condition?.LiteralValue);
+        Assert.AreEqual(2, whileStatement.InnerStatements.Count());
+    }
+
+    [TestMethod]
     public void ProgramStatement()
     {
         var source = """
