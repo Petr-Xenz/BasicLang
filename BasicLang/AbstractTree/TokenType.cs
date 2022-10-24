@@ -59,7 +59,7 @@ internal enum TokenType
     Call,
     Sub,
     Def,
-    Declare,
+    FnEnd,
     Dim,
     True,
     False,

@@ -1,6 +1,5 @@
 ﻿using BasicLang.AbstractTree;
 using BasicLang.AbstractTree.Statements;
-using BasicLang.AbstractTree.Statements.Expressions;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Parsing;
@@ -49,12 +48,31 @@ internal partial class Parser
                 For => ParseFor(current),
                 While => ParseWhile(current),
                 Do => ParseDoUntil(current),
+                Def => ParseFunction(current),
                 Identifier => ParseIdentifier(current),
                 _ => ParseUnknown(current),
             };
         }
 
         return new ErrorStatement(string.Empty, default);
+    }
+
+    private IStatement ParseFunction(Token current)
+    {
+        Skip(); //Def
+        Expect(Identifier);
+        var functionName = Consume();
+        
+        Expect(OpenParenthesis);
+        Skip(); //(
+        var arguments = !Match(CloseParenthesis) ? ParseExpressionsList(Peek()) : Enumerable.Empty<IExpression>();
+        Expect(CloseParenthesis);
+        Skip(); //)
+        Expect(EoL);
+
+        var (innerStatements, end) = ParseStatementsUntilTokenIsMet(FnEnd);
+
+        return new FunctionStatement(functionName, arguments, innerStatements, GetSourcePositionFromRange(current, end), current.SourcePosition);
     }
 
     private IStatement ParseDoUntil(Token current)
