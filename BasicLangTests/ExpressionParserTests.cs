@@ -118,6 +118,108 @@ public class ExpressionParserTests
     }
 
     [TestMethod]
+    public void FunctionCallExpressionZeroParameters()
+    {
+        var source = "let foo = Bar()";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var variableDeclarationStatement = tree.RootStatement as VariableDeclarationStatement;
+        Assert.IsNotNull(variableDeclarationStatement, nameof(variableDeclarationStatement));
+
+        var assignmentExpression = variableDeclarationStatement.Expression.Child as AssignmentExpression;
+        Assert.IsNotNull(assignmentExpression, nameof(assignmentExpression));
+
+        var variableExpression = assignmentExpression.Left as VariableExpression;
+        Assert.AreEqual("foo", variableExpression?.Name);
+
+        var functionCallExpression = assignmentExpression.Right as FunctionCallExpression;
+        Assert.IsNotNull(functionCallExpression);
+
+        Assert.AreEqual("Bar", functionCallExpression.Name);
+        Assert.AreEqual(0, functionCallExpression.Parameters.Count());
+    }
+
+    [TestMethod]
+    public void FunctionCallComplexExpression()
+    {
+        var source = "let foo = Bar(1 + 1) + 1";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var variableDeclarationStatement = tree.RootStatement as VariableDeclarationStatement;
+        Assert.IsNotNull(variableDeclarationStatement, nameof(variableDeclarationStatement));
+
+        var assignmentExpression = variableDeclarationStatement.Expression.Child as AssignmentExpression;
+        Assert.IsNotNull(assignmentExpression, nameof(assignmentExpression));
+
+        var variableExpression = assignmentExpression.Left as VariableExpression;
+        Assert.AreEqual("foo", variableExpression?.Name);
+
+        var additionExpression = assignmentExpression.Right as AdditionExpression;
+        Assert.IsNotNull(additionExpression);
+
+        var function = additionExpression.Left as FunctionCallExpression;
+
+        Assert.AreEqual("Bar", function?.Name);
+        Assert.AreEqual(1, function?.Parameters.Count());
+
+        var literal = additionExpression.Right as IntegerLiteralExpression;
+        Assert.AreEqual(1L, literal?.LiteralValue);
+
+    }
+
+    [TestMethod]
+    public void FunctionCallExpressionSingleParameter()
+    {
+        var source = "let foo = Bar(1)";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var variableDeclarationStatement = tree.RootStatement as VariableDeclarationStatement;
+        Assert.IsNotNull(variableDeclarationStatement, nameof(variableDeclarationStatement));
+
+        var assignmentExpression = variableDeclarationStatement.Expression.Child as AssignmentExpression;
+        Assert.IsNotNull(assignmentExpression, nameof(assignmentExpression));
+
+        var variableExpression = assignmentExpression.Left as VariableExpression;
+        Assert.AreEqual("foo", variableExpression?.Name);
+
+        var functionCallExpression = assignmentExpression.Right as FunctionCallExpression;
+        Assert.IsNotNull(functionCallExpression);
+
+        Assert.AreEqual("Bar", functionCallExpression.Name);
+        Assert.AreEqual(1, functionCallExpression.Parameters.Count());
+    }
+
+    [TestMethod]
+    public void FunctionCallExpressionMultipleParameters()
+    {
+        var source = "let foo = Bar(1, 2)";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var variableDeclarationStatement = tree.RootStatement as VariableDeclarationStatement;
+        Assert.IsNotNull(variableDeclarationStatement, nameof(variableDeclarationStatement));
+
+        var assignmentExpression = variableDeclarationStatement.Expression.Child as AssignmentExpression;
+        Assert.IsNotNull(assignmentExpression, nameof(assignmentExpression));
+
+        var variableExpression = assignmentExpression.Left as VariableExpression;
+        Assert.AreEqual("foo", variableExpression?.Name);
+
+        var functionCallExpression = assignmentExpression.Right as FunctionCallExpression;
+        Assert.IsNotNull(functionCallExpression);
+
+        Assert.AreEqual("Bar", functionCallExpression.Name);
+        Assert.AreEqual(2, functionCallExpression.Parameters.Count());
+    }
+
+    [TestMethod]
     public void GroupingExpression()
     {
         var source = "let foo = (1 + 1)";

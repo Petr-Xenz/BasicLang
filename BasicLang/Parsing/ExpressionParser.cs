@@ -190,7 +190,25 @@ internal partial class Parser
                 }
             }
 
-            IExpression ParseIdentifier() => new VariableExpression(current.Value, current.SourcePosition);
+            IExpression ParseIdentifier()
+            {
+                return Peek().Type switch
+                {
+                    OpenParenthesis => ParseFunctionCall(),
+                    _ => new VariableExpression(current.Value, current.SourcePosition),
+                };
+            }
+
+            IExpression ParseFunctionCall()
+            {
+                var name = current;
+                Skip(); // (
+                var parameters = !Match(CloseParenthesis) ? _parser.ParseExpressionsList(Peek()) : Enumerable.Empty<IExpression>();
+                _parser.Expect(CloseParenthesis);
+                var end = Consume(); // )
+
+                return new FunctionCallExpression(name.Value, parameters, GetSourcePositionFromRange(name, end));
+            }
 
             IExpression ParseGrouping(Token starting)
             {
