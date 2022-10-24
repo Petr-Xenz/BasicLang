@@ -1,8 +1,8 @@
 ﻿namespace BasicLang.AbstractTree.Statements;
 
-internal class UntilStatement : ConditionalLoopStatement
+internal class DoUntilStatement : ConditionalLoopStatement
 {
-    public UntilStatement(IExpression condition, IEnumerable<IStatement> innerStatements, SourcePosition sourcePosition)
+    public DoUntilStatement(IExpression condition, IEnumerable<IStatement> innerStatements, SourcePosition sourcePosition)
         : base(condition, innerStatements, sourcePosition)
     {
         GeneralErrorPosition = new SourcePosition(sourcePosition.Offset, sourcePosition.Line, sourcePosition.Column, 5);

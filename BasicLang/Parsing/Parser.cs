@@ -48,7 +48,7 @@ internal partial class Parser
                 If => ParseIf(current),
                 For => ParseFor(current),
                 While => ParseWhile(current),
-                Loop => ParseUntil(current),
+                Do => ParseDoUntil(current),
                 Identifier => ParseIdentifier(current),
                 _ => ParseUnknown(current),
             };
@@ -57,14 +57,14 @@ internal partial class Parser
         return new ErrorStatement(string.Empty, default);
     }
 
-    private IStatement ParseUntil(Token current)
+    private IStatement ParseDoUntil(Token current)
     {
-        Skip(); //loop
+        Skip(); //Do
         Expect(EoL);
         var (innerStatements, end) = ParseStatementsUntilTokenIsMet(Until);
         var condition = _expressionParser.Parse(Peek());
 
-        return new UntilStatement(condition, innerStatements, GetSourcePositionFromRange(current, end));
+        return new DoUntilStatement(condition, innerStatements, GetSourcePositionFromRange(current, end));
     }
 
     private IStatement ParseWhile(Token current)

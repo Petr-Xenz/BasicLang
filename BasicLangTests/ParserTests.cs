@@ -380,11 +380,11 @@ public class ParserTests
     }
 
     [TestMethod]
-    public void UntilStatement()
+    public void DoUntilStatement()
     {
         var source =
                 """
-                loop
+                do
                     x = 5
                     y = 6
                 until true
@@ -393,7 +393,7 @@ public class ParserTests
 
         var tree = new Parser(tokens, source).Parse();
 
-        var whileStatement = tree.RootStatement as UntilStatement;
+        var whileStatement = tree.RootStatement as DoUntilStatement;
         Assert.IsNotNull(whileStatement);
 
         var condition = whileStatement.Condition as BooleanExpression;
