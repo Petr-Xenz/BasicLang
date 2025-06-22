@@ -19,7 +19,7 @@ internal class BasicRuntime
 
     public void Execute()
     {
-        _position = Compiler.HeaderSize; //skip header;
+        _position = Compiler.HeaderSize; // skip header;
         while (_position < _program.Length)
         {
             _ = _program[_position] switch
@@ -37,7 +37,7 @@ internal class BasicRuntime
         var right = _stack.Pop();
         var left = _stack.Pop();
 
-        //TODO type check
+        // TODO type check
         if (left is long l && right is long r)
         {
             _stack.Push(l + r);

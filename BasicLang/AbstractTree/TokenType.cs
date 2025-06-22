@@ -33,7 +33,7 @@ internal enum TokenType
 
     EoL,
     EoF,
-    //Begining of keywords
+    // Begining of keywords
     Program,
     Or,
     Xor,
@@ -64,5 +64,5 @@ internal enum TokenType
     True,
     False,
     End,
-    //End of keywords
+    // End of keywords
 }

@@ -164,7 +164,7 @@ public partial class LexerTests
     }
 
     //[TestMethod]
-    //TODO check on linux
+    // TODO check on linux
     public void TwoLineOfCommentsLexing()
     {
         var source =

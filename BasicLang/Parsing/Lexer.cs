@@ -108,7 +108,7 @@ internal class Lexer
             }
             else if (char.IsWhiteSpace(Peek()))
             {
-                //TODO WST
+                // TODO WST
                 _position++;
                 _columnPosition++;
                 MoveWhile(c => char.IsWhiteSpace(c));

@@ -59,15 +59,15 @@ internal partial class Parser
 
     private IStatement ParseFunction(Token current)
     {
-        Skip(); //Def
+        Skip(); // Def
         Expect(Identifier);
         var functionName = Consume();
         
         Expect(OpenParenthesis);
-        Skip(); //(
+        Skip(); // (
         var arguments = !Match(CloseParenthesis) ? ParseExpressionsList(Peek()) : Enumerable.Empty<IExpression>();
         Expect(CloseParenthesis);
-        Skip(); //)
+        Skip(); // )
         Expect(EoL);
 
         var (innerStatements, end) = ParseStatementsUntilTokenIsMet(FnEnd);
@@ -77,7 +77,7 @@ internal partial class Parser
 
     private IStatement ParseDoUntil(Token current)
     {
-        Skip(); //Do
+        Skip(); // do
         Expect(EoL);
         var (innerStatements, end) = ParseStatementsUntilTokenIsMet(Until);
         var condition = _expressionParser.Parse(Peek());
@@ -87,7 +87,7 @@ internal partial class Parser
 
     private IStatement ParseWhile(Token current)
     {
-        Skip(); //while
+        Skip(); // while
         var condition = _expressionParser.Parse(Peek());
         Expect(EoL);
         var (innerStatements, end) = ParseStatementsUntilTokenIsMet(Loop);
@@ -97,7 +97,7 @@ internal partial class Parser
 
     private IStatement ParseFor(Token current)
     {
-        Skip(); //for
+        Skip(); // for
 
         ForCounterExpression? counter = null;
         if (Match(Identifier))
@@ -114,12 +114,12 @@ internal partial class Parser
         {
             var counterVariable = _expressionParser.Parse(Peek());
             Expect(To);
-            Skip(); //to
+            Skip(); // to
             var limit = _expressionParser.Parse(Peek());
             var step = 1L;
             if (Match(Step))
             {
-                Skip(); //Step
+                Skip(); // Step
                 Expect(Number);
                 if (Peek().Value.Contains('.'))
                     throw new ProgramException("Integer literal expected", Peek());
@@ -139,7 +139,7 @@ internal partial class Parser
             result.Add(ParseStatement());
             SkipInsignificant();
         }
-        var end = Consume(); //type
+        var end = Consume(); // type
 
         return (result, end);
     }
@@ -158,7 +158,7 @@ internal partial class Parser
         IStatement? onFalseStatement = null;
         if (Match(Else))
         {
-            Skip(); //else
+            Skip(); // else
             onFalseStatement = ParseStatement();
         }
 
@@ -166,14 +166,14 @@ internal partial class Parser
 
         (IExpression condition, IStatement onTrueStatement) ParseIfStatement()
         {
-            Skip(); //if
+            Skip(); // if
             var condition = _expressionParser.Parse(Peek());
             if (!Match(Then))
             {
                 throw new ProgramException("Then keyword expected", PeekNext());
             }
 
-            Skip(); //then
+            Skip(); // then
 
             var onTrueStatement = ParseStatement();
 
@@ -253,7 +253,7 @@ internal partial class Parser
     private IStatement ParseProgramDeclaration(Token initial)
     {
         var startPostion = initial.SourcePosition;
-        Skip(); //program
+        Skip(); // program
         var programName = Peek();
 
         if (!Match(Identifier))
@@ -292,7 +292,7 @@ internal partial class Parser
 
     private IStatement ParseLetVariableDeclarationExpression(Token initial)
     {
-        Skip(); //let
+        Skip(); // let
         if (!Match(Identifier))
         {
             Skip();
