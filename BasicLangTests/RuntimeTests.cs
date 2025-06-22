@@ -8,12 +8,20 @@ public class RuntimeTests
 {
     private readonly TextWriter _consoleWriter = Console.Out;
 
+    private readonly StringWriter _testWriter = new();
+
+    [TestInitialize]
+    public void TestSetup()
+    {
+        Console.SetOut(_testWriter);
+    }
 
     [TestCleanup]
     public void TestCleanUp()
     {
         Console.SetOut(_consoleWriter);
     }
+
 
     [TestMethod]
     public void PrintIntegerLiteral()
@@ -23,12 +31,9 @@ public class RuntimeTests
         var tree = new Parser(tokens, source).Parse();
         var opcodes = new Compiler(tree).Compile();
 
-        var writer = new StringWriter();
-        Console.SetOut(writer);
-
         new BasicRuntime(opcodes).Execute();
 
-        Assert.AreEqual("5\r\n", writer.ToString());
+        Assert.AreEqual("5", _testWriter.ToString().TrimEnd());
     }
 
     [TestMethod]
@@ -39,12 +44,9 @@ public class RuntimeTests
         var tree = new Parser(tokens, source).Parse();
         var opcodes = new Compiler(tree).Compile();
 
-        var writer = new StringWriter();
-        Console.SetOut(writer);
-
         new BasicRuntime(opcodes).Execute();
 
-        Assert.AreEqual("56\r\n", writer.ToString());
+        Assert.AreEqual("56", _testWriter.ToString().TrimEnd());
     }
 
     [TestMethod]
@@ -55,11 +57,8 @@ public class RuntimeTests
         var tree = new Parser(tokens, source).Parse();
         var opcodes = new Compiler(tree).Compile();
 
-        var writer = new StringWriter();
-        Console.SetOut(writer);
-
         new BasicRuntime(opcodes).Execute();
 
-        Assert.AreEqual("10\r\n", writer.ToString());
+        Assert.AreEqual("10", _testWriter.ToString().TrimEnd());
     }
 }
