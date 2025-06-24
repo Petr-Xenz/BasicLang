@@ -3,7 +3,10 @@ using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Parsing;
 
-internal class Lexer
+/// <summary>
+/// Stateful lexer, converting string provided string to tokens
+/// </summary>
+internal sealed class Lexer
 {
     private readonly string _source;
 
@@ -13,7 +16,7 @@ internal class Lexer
 
     private int _currentLine = 1;
 
-    private static IReadOnlyDictionary<char, TokenType> _simpleOperatorsToType = new Dictionary<char, TokenType>
+    private static readonly IReadOnlyDictionary<char, TokenType> _simpleOperatorsToType = new Dictionary<char, TokenType>
 {
     { '<', LessThen },
     { '>', GreaterThen },
@@ -38,6 +41,12 @@ internal class Lexer
         _source = source;
     }
 
+    /// <summary>
+    /// Continuously parse raw string to a stream of tokens 
+    /// </summary>
+    /// <remarks>
+    /// Not thread safe
+    /// </remarks>
     public IEnumerable<Token> Lex()
     {
         while (_position < _source.Length)
@@ -62,8 +71,10 @@ internal class Lexer
                 _position++;
                 _columnPosition++;
                 MoveWhile(c => c != '"' || c != '\n' || c != '\r');
+
                 // TODO error reporting
-                yield return new Token(TokenType.String, _source[startingPosition.._position], new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition));
+                var tokenPosition = new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition);
+                yield return new Token(TokenType.String, _source[startingPosition.._position], tokenPosition);
             }
             else if (Peek() == '!')
             {
@@ -72,7 +83,9 @@ internal class Lexer
                 _position++;
                 _columnPosition++;
                 MoveWhile(c => c is not ('\n' or '\r'));
-                yield return new Token(Comment, _source[(startingPosition + 1).._position], new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition));
+
+                var tokenPosition = new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition);
+                yield return new Token(Comment, _source[(startingPosition + 1).._position], tokenPosition);
             }
             else if (Peek() == '=' && PeekNext() == '=')
             {
