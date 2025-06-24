@@ -10,7 +10,7 @@ internal class BooleanExpression : IExpression
 
     public bool LiteralValue { get; }
 
-    public IEnumerable<IExpression> Children => Enumerable.Empty<IExpression>();
+    public IEnumerable<IExpression> Children => [];
 
     public SourcePosition GeneralErrorPosition => SourcePosition;
 

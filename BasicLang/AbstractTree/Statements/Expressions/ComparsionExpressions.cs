@@ -1,61 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace BasicLang.AbstractTree.Statements.Expressions;
 
-namespace BasicLang.AbstractTree.Statements.Expressions;
-
-internal class EqualityExpressions : BinaryExpression
+internal class EqualityExpressions(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public EqualityExpressions(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => "==";
 }
 
-internal class NonEqualityExpressions : BinaryExpression
+internal class NonEqualityExpressions(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public NonEqualityExpressions(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => "!=";
 }
 
-internal class LessThanExpressions : BinaryExpression
+internal class LessThanExpressions(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public LessThanExpressions(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => "<";
 }
 
-internal class GreaterThanExpressions : BinaryExpression
+internal class GreaterThanExpressions(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public GreaterThanExpressions(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => ">";
 }
 
-internal class LessThanOrEqualExpressions : BinaryExpression
+internal class LessThanOrEqualExpressions(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public LessThanOrEqualExpressions(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => "<=";
 }
 
-internal class GreaterThanOrEqualExpressions : BinaryExpression
+internal class GreaterThanOrEqualExpressions(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public GreaterThanOrEqualExpressions(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => ">=";
 }

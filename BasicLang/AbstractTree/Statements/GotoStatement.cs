@@ -12,7 +12,7 @@ internal class GotoStatement : IStatement
 
     public string Value => $"Goto {LineValue}";
 
-    public IEnumerable<IStatement> Children => Enumerable.Empty<IStatement>();
+    public IEnumerable<IStatement> Children => [];
 
     public SourcePosition SourcePosition { get; }
 

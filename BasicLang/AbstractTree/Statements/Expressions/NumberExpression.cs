@@ -29,16 +29,8 @@ internal abstract class NumberExpression<T> : IExpression where T : struct
     IEnumerable<IStatement> IStatement.Children => Children;
 }
 
-internal class FloatLiteralExpression : NumberExpression<double>
-{
-    public FloatLiteralExpression(double value, SourcePosition sourcePosition) : base(value, sourcePosition)
-    {
-    }
-}
+internal class FloatLiteralExpression(double value, SourcePosition sourcePosition)
+    : NumberExpression<double>(value, sourcePosition);
 
-internal class IntegerLiteralExpression : NumberExpression<long>
-{
-    public IntegerLiteralExpression(long value, SourcePosition sourcePosition) : base(value, sourcePosition)
-    {
-    }
-}
+internal class IntegerLiteralExpression(long value, SourcePosition sourcePosition)
+    : NumberExpression<long>(value, sourcePosition);

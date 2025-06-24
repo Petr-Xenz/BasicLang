@@ -10,9 +10,9 @@ internal class Compiler
     public const int HeaderSize = 32;
 
     private readonly ParseSyntaxTree _tree;
-    private readonly Dictionary<string, int> _labelsLocations = new();
-    private readonly Dictionary<int, int> _sourceToOpCodeLocation = new();
-    private readonly List<byte> _constants = new();
+    private readonly Dictionary<string, int> _labelsLocations = [];
+    private readonly Dictionary<int, int> _sourceToOpCodeLocation = [];
+    private readonly List<byte> _constants = [];
 
     private int _stackDepth;
 
@@ -62,7 +62,7 @@ internal class Compiler
             .Select(CompileNode)
             .SelectMany(op => op)
             .ToArray()
-            .Concat(new byte[] { (byte)Call.Value, (byte)SystemCalls.WriteLine, (byte)_stackDepth });
+            .Concat([(byte)Call.Value, (byte)SystemCalls.WriteLine, (byte)_stackDepth]);
 
         _stackDepth = 0;
         return result;

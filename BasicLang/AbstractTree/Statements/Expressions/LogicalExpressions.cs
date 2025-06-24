@@ -1,48 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace BasicLang.AbstractTree.Statements.Expressions;
 
-namespace BasicLang.AbstractTree.Statements.Expressions;
-
-internal class OrExpression : BinaryExpression
+internal class OrExpression(IExpression left, IExpression right, SourcePosition sourcePosition) 
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public OrExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => "or";
 }
 
 
-internal class XorExpression : BinaryExpression
+internal class XorExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public XorExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => "xor";
 }
 
-internal class AndExpression : BinaryExpression
+internal class AndExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public AndExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-    }
-
     protected override string Delimeter => "and";
 }
 
-internal class NotExpression : IExpression
+internal class NotExpression(IExpression inner, SourcePosition sourcePosition)
+    : IExpression
 {
-    public IExpression Inner { get; }
-
-    public NotExpression(IExpression inner, SourcePosition sourcePosition)
-    {
-        Inner = inner;
-        SourcePosition = sourcePosition;
-    }
+    public IExpression Inner { get; } = inner;
 
     public IEnumerable<IExpression> Children
     {
@@ -56,7 +36,7 @@ internal class NotExpression : IExpression
 
     public string Value => $"not {Inner.Value}";
 
-    public SourcePosition SourcePosition { get; }
+    public SourcePosition SourcePosition { get; } = sourcePosition;
 
     IEnumerable<IStatement> IStatement.Children => Children;
 }

@@ -1,41 +1,25 @@
 ﻿namespace BasicLang.AbstractTree.Statements.Expressions;
 
-internal class AdditionExpression : BinaryExpression
+internal class AdditionExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public AdditionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-
-    }
-
     protected override string Delimeter => "+";
 }
 
-internal class SubtractionExpression : BinaryExpression
+internal class SubtractionExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public SubtractionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-
-    }
-
     protected override string Delimeter => "-";
 }
 
-internal class MultiplicationExpression : BinaryExpression
+internal class MultiplicationExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public MultiplicationExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-
-    }
-
     protected override string Delimeter => "*";
 }
 
-internal class DivisionExpression : BinaryExpression
+internal class DivisionExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
+    : BinaryExpression(left, right, sourcePosition)
 {
-    public DivisionExpression(IExpression left, IExpression right, SourcePosition sourcePosition) : base(left, right, sourcePosition)
-    {
-
-    }
-
     protected override string Delimeter => "/";
 }

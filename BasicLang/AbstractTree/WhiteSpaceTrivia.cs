@@ -1,6 +1,6 @@
 ﻿namespace BasicLang.AbstractTree;
 
-internal readonly struct WhiteSpaceTrivia
+internal readonly record struct WhiteSpaceTrivia
 {
     public WhiteSpaceTrivia(int leadingSpacesCount, int trailingSpacesCount)
     {
@@ -9,5 +9,6 @@ internal readonly struct WhiteSpaceTrivia
     }
 
     public int LeadingSpacesCount { get; }
+
     public int TrailingSpacesCount { get; }
 }
