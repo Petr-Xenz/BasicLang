@@ -14,7 +14,7 @@ internal class GroupingExpression : IExpression
     {
         get
         {
-            yield return Inner;   
+            yield return Inner;
         }
     }
 

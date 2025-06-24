@@ -7,12 +7,14 @@ namespace BasicLang.Parsing;
 internal partial class Parser
 {
     private readonly IReadOnlyList<Token> _tokens;
+
     private readonly ExpressionParser _expressionParser;
 
-    private int _position;
-
     private readonly List<ProgramError> _parsingErrors = new();
+
     private readonly string _sourceCode;
+
+    private int _position;
 
     public Parser(IEnumerable<Token> tokens, string sourceCode)
     {
@@ -62,7 +64,7 @@ internal partial class Parser
         Skip(); // Def
         Expect(Identifier);
         var functionName = Consume();
-        
+
         Expect(OpenParenthesis);
         Skip(); // (
         var arguments = !Match(CloseParenthesis) ? ParseExpressionsList(Peek()) : Enumerable.Empty<IExpression>();
@@ -367,7 +369,7 @@ internal partial class Parser
     private int SkipInsignificant()
     {
         var steps = 0;
-        while(Peek().Type == EoL || Peek().Type == Comment)
+        while (Peek().Type == EoL || Peek().Type == Comment)
         {
             steps++;
             _position++;

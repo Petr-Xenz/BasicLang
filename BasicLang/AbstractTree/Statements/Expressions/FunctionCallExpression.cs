@@ -16,7 +16,9 @@ internal class FunctionCallExpression : IExpression
     public SourcePosition GeneralErrorPosition => SourcePosition;
 
     public string Value { get; }
+
     public IEnumerable<IExpression> Parameters { get; }
+
     public SourcePosition SourcePosition { get; }
 
     IEnumerable<IStatement> IStatement.Children => Children;

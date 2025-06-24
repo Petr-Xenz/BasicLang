@@ -7,7 +7,7 @@ internal class ConditionalLoopStatement : IStatement
         Condition = condition;
         InnerStatements = innerStatements;
         SourcePosition = sourcePosition;
-        Value = $"";// TODO
+        Value = $""; // TODO
     }
 
     public IEnumerable<IStatement> Children

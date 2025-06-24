@@ -10,6 +10,7 @@ internal class ParseSyntaxTree
     }
 
     public IStatement RootStatement { get; }
+
     public IEnumerable<ProgramError> Errors { get; }
 
     public string SourceCode { get; }

@@ -13,7 +13,7 @@ internal class Lexer
 
     private int _currentLine = 1;
 
-    private static int _newLineLength = Environment.NewLine.Length;
+    private static readonly int _newLineLength = Environment.NewLine.Length;
 
     private static IReadOnlyDictionary<char, TokenType> _simpleOperatorsToType = new Dictionary<char, TokenType>
 {
@@ -111,7 +111,7 @@ internal class Lexer
                 // TODO WST
                 _position++;
                 _columnPosition++;
-                MoveWhile(c => char.IsWhiteSpace(c));
+                MoveWhile(char.IsWhiteSpace);
             }
         }
 

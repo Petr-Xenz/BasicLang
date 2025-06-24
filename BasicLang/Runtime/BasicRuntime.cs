@@ -1,11 +1,14 @@
 ﻿using BasicLang.Compiling;
 
 namespace BasicLang.Runtime;
+
 internal class BasicRuntime
 {
     private readonly byte[] _program;
+
+    private readonly Stack<object> _stack = new();
+
     private int _position;
-    private Stack<object> _stack = new();
 
     private readonly IReadOnlyDictionary<byte, Action<object[]>> _systemCalls = new Dictionary<byte, Action<object[]>>()
     {
@@ -86,6 +89,7 @@ internal class BasicRuntime
     private class Unit
     {
         private Unit() { }
+        
         public static Unit Instance { get; } = new();
     }
 }

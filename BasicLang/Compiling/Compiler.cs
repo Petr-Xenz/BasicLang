@@ -5,6 +5,7 @@ using System.Buffers;
 using static System.Reflection.Emit.OpCodes;
 
 namespace BasicLang.Compiling;
+
 internal class Compiler
 {
     public const int HeaderSize = 32;

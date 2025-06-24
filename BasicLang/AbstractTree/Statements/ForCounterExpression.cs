@@ -24,8 +24,11 @@ internal class ForCounterExpression : IExpression
     public string Value => "TODO";
 
     public SourcePosition SourcePosition { get; }
+
     public IExpression CounterVariable { get; }
+
     public IExpression Limit { get; }
+
     public long Step { get; }
 
     IEnumerable<IStatement> IStatement.Children => Children;

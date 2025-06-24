@@ -1,6 +1,6 @@
 ﻿namespace BasicLang.AbstractTree.Statements.Expressions;
 
-internal class OrExpression(IExpression left, IExpression right, SourcePosition sourcePosition) 
+internal class OrExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
     : BinaryExpression(left, right, sourcePosition)
 {
     protected override string Delimeter => "or";

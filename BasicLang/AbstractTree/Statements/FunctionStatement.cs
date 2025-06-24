@@ -2,14 +2,14 @@
 
 internal class FunctionStatement : IStatement
 {
-    public FunctionStatement(Token functionName, IEnumerable<IExpression> arguments, 
+    public FunctionStatement(Token functionName, IEnumerable<IExpression> arguments,
         IEnumerable<IStatement> innerStatements, SourcePosition sourcePosition, SourcePosition initialToken)
     {
         FunctionName = functionName.Value;
         Arguments = arguments;
         InnerStatements = innerStatements;
         SourcePosition = sourcePosition;
-        GeneralErrorPosition = new SourcePosition(initialToken.Offset, initialToken.Line, 
+        GeneralErrorPosition = new SourcePosition(initialToken.Offset, initialToken.Line,
             initialToken.Column, functionName.SourcePosition.Offset + functionName.SourcePosition.Length - initialToken.Offset);
         Value = "TODO";
     }
@@ -35,7 +35,10 @@ internal class FunctionStatement : IStatement
     }
 
     public SourcePosition SourcePosition { get; }
+
     public string FunctionName { get; }
+
     public IEnumerable<IExpression> Arguments { get; }
+
     public IEnumerable<IStatement> InnerStatements { get; }
 }

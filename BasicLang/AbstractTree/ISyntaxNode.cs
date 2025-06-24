@@ -2,5 +2,5 @@
 
 internal interface ISyntaxNode : ICodeElement
 {
-    public IEnumerable<ISyntaxNode> Children { get; }
+    IEnumerable<ISyntaxNode> Children { get; }
 }
