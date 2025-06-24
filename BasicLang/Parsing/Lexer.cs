@@ -13,8 +13,6 @@ internal class Lexer
 
     private int _currentLine = 1;
 
-    private static readonly int _newLineLength = Environment.NewLine.Length;
-
     private static IReadOnlyDictionary<char, TokenType> _simpleOperatorsToType = new Dictionary<char, TokenType>
 {
     { '<', LessThen },
@@ -46,7 +44,7 @@ internal class Lexer
         {
             if (IsEoL())
             {
-                yield return new Token(EoL, Environment.NewLine, new SourcePosition(_position, _currentLine, _columnPosition, _newLineLength));
+                yield return new Token(EoL, Environment.NewLine, new SourcePosition(_position, _currentLine, _columnPosition, NewLineLength()));
                 MoveToNewLine();
             }
             else if (char.IsNumber(Peek()))
@@ -118,12 +116,13 @@ internal class Lexer
         yield return new Token(EoF, "", CreateSimplePosition(0));
     }
 
-    private SourcePosition CreateSimplePosition(int length) => new SourcePosition(_position, _currentLine, _columnPosition, length);
+    private SourcePosition CreateSimplePosition(int length)
+        => new(_position, _currentLine, _columnPosition, length);
 
     private void MoveToNewLine()
     {
         _currentLine++;
-        _position += _newLineLength;
+        _position += NewLineLength();
         _columnPosition = 1;
     }
 
@@ -180,10 +179,7 @@ internal class Lexer
         return '\0';
     }
 
-    private char Peek()
-    {
-        return _source[_position];
-    }
+    private char Peek() => _source[_position];
 
     private char PeekNext()
     {
@@ -192,10 +188,18 @@ internal class Lexer
             : '\0';
     }
 
-    private bool IsEoL()
-    {
-        return _newLineLength == 1
-            ? _source[_position] == '\r'
-            : _source[_position] == '\r' && PeekNext() == '\n';
-    }
+    /// <summary>
+    /// Check if current position is the end of a line independent of the current system's newline format.
+    /// </summary>
+    private bool IsEoL() => Peek() == '\n' || (Peek() == '\r' && PeekNext() == '\n');
+
+    /// <summary>
+    /// Returns the length of the newline characters in the input string,
+    /// independent of the current system's newline format.
+    /// </summary>
+    /// <remarks>
+    /// This method has temporal coupling with <see cref="Lexer.IsEol"/>,
+    /// and is expected to be called only when it's determined that the current position is at the end of a line.
+    /// </remarks>
+    private int NewLineLength() => Peek() == '\r' ? 2 : 1;
 }

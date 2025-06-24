@@ -1,6 +1,6 @@
 ﻿namespace BasicLang.AbstractTree;
 
-internal readonly struct SourcePosition
+internal readonly record struct SourcePosition
 {
     public SourcePosition(int offset, int line, int column, int length, WhiteSpaceTrivia whiteSpaceTrivia = default)
     {
@@ -20,10 +20,4 @@ internal readonly struct SourcePosition
     public int Length { get; }
 
     private WhiteSpaceTrivia WhiteSpaceTrivia { get; }
-
-    public override string ToString()
-    {
-        return $"{Line}:{Column}";
-    }
-
 }

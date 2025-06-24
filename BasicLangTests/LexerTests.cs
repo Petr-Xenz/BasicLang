@@ -1,10 +1,13 @@
+using Newtonsoft.Json.Linq;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Tests;
 
 [TestClass]
-public partial class LexerTests
+public class LexerTests
 {
+    private static readonly int _newLineLength = Environment.NewLine.Length;
+
     [TestMethod]
     public void IntegerLexing()
     {
@@ -13,11 +16,11 @@ public partial class LexerTests
 
         var expected = new Token[]
         {
-            new Token(Number, "1", new SourcePosition(0, 0, 0, 0)),
-            new Token(Number, "23", new SourcePosition(0, 0, 0, 0)),
-            new Token(Number, "023", new SourcePosition(0, 0, 0, 0)),
-            new Token(Number, "14778", new SourcePosition(0, 0, 0, 0)),
-            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
+            new(Number, "1", SourcePosition.Empty),
+            new(Number, "23", SourcePosition.Empty),
+            new(Number, "023", SourcePosition.Empty),
+            new(Number, "14778", SourcePosition.Empty),
+            new(EoF, "", SourcePosition.Empty),
         };
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
@@ -27,14 +30,14 @@ public partial class LexerTests
     public void FloatLexing()
     {
         var source = "1.23 023.14778";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(Number, "1.23", new SourcePosition(0, 0, 0, 0)),
-            new Token(Number, "023.14778", new SourcePosition(0, 0, 0, 0)),
-            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
+            new(Number, "1.23", SourcePosition.Empty),
+            new(Number, "023.14778", SourcePosition.Empty),
+            new(EoF, "", SourcePosition.Empty),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
@@ -43,15 +46,15 @@ public partial class LexerTests
     public void IdentifierLexing()
     {
         var source = "foo bar1 b1az";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(Identifier, "foo", new SourcePosition(0, 0, 0, 0)),
-            new Token(Identifier, "bar1", new SourcePosition(0, 0, 0, 0)),
-            new Token(Identifier, "b1az", new SourcePosition(0, 0, 0, 0)),
-            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
+            new(Identifier, "foo", SourcePosition.Empty),
+            new(Identifier, "bar1", SourcePosition.Empty),
+            new(Identifier, "b1az", SourcePosition.Empty),
+            new(EoF, "", SourcePosition.Empty),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
@@ -60,16 +63,16 @@ public partial class LexerTests
     public void KeywordsLexing()
     {
         var source = "program FOR iF Then";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(Program, "program", new SourcePosition(0, 0, 0, 0)),
-            new Token(For, "FOR", new SourcePosition(0, 0, 0, 0)),
-            new Token(If, "iF", new SourcePosition(0, 0, 0, 0)),
-            new Token(Then, "Then", new SourcePosition(0, 0, 0, 0)),
-            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
+            new(Program, "program", SourcePosition.Empty),
+            new(For, "FOR", SourcePosition.Empty),
+            new(If, "iF", SourcePosition.Empty),
+            new(Then, "Then", SourcePosition.Empty),
+            new(EoF, "", SourcePosition.Empty),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
@@ -78,18 +81,18 @@ public partial class LexerTests
     public void ComparisonOperatorsLexing()
     {
         var source = "< <= >= ><>==";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(LessThen, "<", new SourcePosition(0, 0, 0, 0)),
-            new Token(LessThenOrEqual, "<=", new SourcePosition(0, 0, 0, 0)),
-            new Token(GreaterThenOrEqual, ">=", new SourcePosition(0, 0, 0, 0)),
-            new Token(GreaterThen, ">", new SourcePosition(0, 0, 0, 0)),
-            new Token(NotEqual, "<>", new SourcePosition(0, 0, 0, 0)),
-            new Token(Equal, "==", new SourcePosition(0, 0, 0, 0)),
-            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
+            new(LessThen, "<", SourcePosition.Empty),
+            new(LessThenOrEqual, "<=", SourcePosition.Empty),
+            new(GreaterThenOrEqual, ">=", SourcePosition.Empty),
+            new(GreaterThen, ">", SourcePosition.Empty),
+            new(NotEqual, "<>", SourcePosition.Empty),
+            new(Equal, "==", SourcePosition.Empty),
+            new(EoF, "", SourcePosition.Empty),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
@@ -98,16 +101,16 @@ public partial class LexerTests
     public void ArithmeticOperatorsLexing()
     {
         var source = "+-*/";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(Addition, "+", new SourcePosition(0, 0, 0, 0)),
-            new Token(Subtraction, "-", new SourcePosition(0, 0, 0, 0)),
-            new Token(Multiplication, "*", new SourcePosition(0, 0, 0, 0)),
-            new Token(Division, "/", new SourcePosition(0, 0, 0, 0)),
-            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
+            new(Addition, "+", SourcePosition.Empty),
+            new(Subtraction, "-", SourcePosition.Empty),
+            new(Multiplication, "*", SourcePosition.Empty),
+            new(Division, "/", SourcePosition.Empty),
+            new(EoF, "", SourcePosition.Empty),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
@@ -116,18 +119,18 @@ public partial class LexerTests
     public void SimpleOperatorsLexing()
     {
         var source = "=(),;:";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(Assignment, "=", new SourcePosition(0, 0, 0, 0)),
-            new Token(OpenParenthesis, "(", new SourcePosition(0, 0, 0, 0)),
-            new Token(CloseParenthesis, ")", new SourcePosition(0, 0, 0, 0)),
-            new Token(Comma, ",", new SourcePosition(0, 0, 0, 0)),
-            new Token(Semicolon, ";", new SourcePosition(0, 0, 0, 0)),
-            new Token(Colon, ":", new SourcePosition(0, 0, 0, 0)),
-            new Token(EoF, "", new SourcePosition(0, 0, 0, 0)),
+            new(Assignment, "=", SourcePosition.Empty),
+            new(OpenParenthesis, "(", SourcePosition.Empty),
+            new(CloseParenthesis, ")", SourcePosition.Empty),
+            new(Comma, ",", SourcePosition.Empty),
+            new(Semicolon, ";", SourcePosition.Empty),
+            new(Colon, ":", SourcePosition.Empty),
+            new(EoF, "", SourcePosition.Empty),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result, new TokenComparer());
     }
@@ -136,13 +139,13 @@ public partial class LexerTests
     public void StringsLexing()
     {
         var source = "\"=(),;:\"";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(TokenType.String, "\"=(),;:\"", new SourcePosition(0, 1, 1, 8)),
-            new Token(EoF, "", new SourcePosition(8, 1, 9, 0)),
+            new(TokenType.String, "\"=(),;:\"", new SourcePosition(0, 1, 1, 8)),
+            new(EoF, "", new SourcePosition(8, 1, 9, 0)),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result);
     }
@@ -152,35 +155,66 @@ public partial class LexerTests
     public void CommentsLexing()
     {
         var source = "! =(),;:";
-        var result = new Lexer(source).Lex().ToArray();
-
         var expected = new Token[]
         {
-            new Token(Comment, " =(),;:", new SourcePosition(0, 1, 1, 8)),
-            new Token(EoF, "", new SourcePosition(8, 1, 9, 0)),
+            new(Comment, " =(),;:", new SourcePosition(0, 1, 1, 8)),
+            new(EoF, "", new SourcePosition(8, 1, 9, 0)),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
 
         CollectionAssert.AreEqual(expected, result);
     }
 
-    //[TestMethod]
-    // TODO check on linux
+    [TestMethod]
     public void TwoLineOfCommentsLexing()
     {
-        var source =
-           """
-           ! =(),;:
-           ! =(),;:
-           """;
-        var result = new Lexer(source).Lex().ToArray();
+        var commentText = " =(),;:";
+        var commentLength = commentText.Length + 1;
 
+        var source =
+           $"""
+           !{commentText}
+           !{commentText}
+           """;
         var expected = new Token[]
         {
-            new Token(Comment, " =(),;:", new SourcePosition(0,1, 1, 8)),
-            new Token(EoL, Environment.NewLine, new SourcePosition(8, 1, 9, Environment.NewLine.Length)),
-            new Token(Comment, " =(),;:", new SourcePosition(10, 2, 1, 8)),
-            new Token(EoF, "", new SourcePosition(18, 2, 9, 0)),
+            new(Comment, " =(),;:", new SourcePosition(0, 1, 1, commentLength)),
+            new(EoL, Environment.NewLine, new SourcePosition(commentLength, 1, commentLength + 1, _newLineLength)),
+            new(Comment, " =(),;:", new SourcePosition(commentLength + _newLineLength, 2, 1, commentLength)),
+            new(EoF, "", new SourcePosition(commentLength * 2 + _newLineLength, 2, commentLength + 1, 0)),
         };
+
+        var result = new Lexer(source).Lex().ToArray();
+
+        CollectionAssert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void MultilineLexing()
+    {
+        const int lineOneLength = 3;
+        const int lineTwoLength = 2;
+        const int lineThreeLength = 1;
+        const int lineFourLength = 0;
+
+        var source =
+           """
+           for
+           to
+           +
+
+           -
+           """;
+        var expected = new Token[]
+        {
+            new(EoL, Environment.NewLine, new(lineOneLength, 1, lineOneLength + 1, _newLineLength)),
+            new(EoL, Environment.NewLine, new(lineOneLength + lineTwoLength + _newLineLength, 2, lineTwoLength + 1, _newLineLength)),
+            new(EoL, Environment.NewLine, new(lineOneLength + lineTwoLength + lineThreeLength + _newLineLength * 2, 3 , lineThreeLength + 1, _newLineLength)),
+            new(EoL, Environment.NewLine, new(lineOneLength + lineTwoLength + lineThreeLength + lineFourLength + _newLineLength * 3, 4 , lineFourLength + 1, _newLineLength)),
+        };
+
+        var result = new Lexer(source).Lex().Where(t => t.Type == EoL).ToArray();
 
         CollectionAssert.AreEqual(expected, result);
     }
@@ -193,5 +227,13 @@ public partial class LexerTests
                 && left.Type == right.Type
                 && left.Value == right.Value ? 0 : -1;
         }
+    }
+}
+
+public static class ExtensionHelpers
+{
+    extension(SourcePosition source)
+    {
+        internal static SourcePosition Empty => new(0, 0, 0, 0);
     }
 }
