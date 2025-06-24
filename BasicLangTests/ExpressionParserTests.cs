@@ -287,13 +287,13 @@ public class ExpressionParserTests
         var variableExpression = assignmentExpression.Left as VariableExpression;
         Assert.AreEqual(varName, variableExpression?.Name);
 
-        var binrayExpression = assignmentExpression.Right as T;
-        Assert.IsNotNull(binrayExpression);
+        var binaryExpression = assignmentExpression.Right as T;
+        Assert.IsNotNull(binaryExpression);
 
-        var leftExpression = binrayExpression.Left as U;
+        var leftExpression = binaryExpression.Left as U;
         Assert.AreEqual(left, leftExpression?.LiteralValue);
 
-        var rightExpression = binrayExpression.Right as U;
+        var rightExpression = binaryExpression.Right as U;
         Assert.AreEqual(right, rightExpression?.LiteralValue);
     }
 }
