@@ -75,7 +75,7 @@ public partial class LexerTests
     }
 
     [TestMethod]
-    public void ComparsionOperatorsLexing()
+    public void ComparisonOperatorsLexing()
     {
         var source = "< <= >= ><>==";
         var result = new Lexer(source).Lex().ToArray();

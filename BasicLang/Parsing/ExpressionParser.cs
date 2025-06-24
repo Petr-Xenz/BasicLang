@@ -77,12 +77,12 @@ internal partial class Parser
 
         private IExpression ParseEquality(Token current)
         {
-            var left = ParseComparsion(current);
+            var left = ParseComparison(current);
 
             while (Match(Equal, NotEqual))
             {
                 var op = Consume();
-                var right = ParseComparsion(Peek());
+                var right = ParseComparison(Peek());
                 return op.Type switch
                 {
                     Equal => new EqualityExpressions(left, right, GetSourcePositionFromRange(left.SourcePosition, right.SourcePosition)),
@@ -94,7 +94,7 @@ internal partial class Parser
             return left;
         }
 
-        private IExpression ParseComparsion(Token current)
+        private IExpression ParseComparison(Token current)
         {
             var left = ParseTerm(current);
 

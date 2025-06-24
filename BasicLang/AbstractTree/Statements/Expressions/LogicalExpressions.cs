@@ -3,20 +3,20 @@
 internal class OrExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
     : BinaryExpression(left, right, sourcePosition)
 {
-    protected override string Delimeter => "or";
+    protected override string Delimiter => "or";
 }
 
 
 internal class XorExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
     : BinaryExpression(left, right, sourcePosition)
 {
-    protected override string Delimeter => "xor";
+    protected override string Delimiter => "xor";
 }
 
 internal class AndExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
     : BinaryExpression(left, right, sourcePosition)
 {
-    protected override string Delimeter => "and";
+    protected override string Delimiter => "and";
 }
 
 internal class NotExpression(IExpression inner, SourcePosition sourcePosition)

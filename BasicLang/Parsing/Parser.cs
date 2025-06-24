@@ -212,7 +212,7 @@ internal partial class Parser
 
         if (expressions.Count == 0)
         {
-            _parsingErrors.Add(new ProgramError("Print statement should have atlest one expression", initial.SourcePosition));
+            _parsingErrors.Add(new ProgramError("Print statement should have at lest one expression", initial.SourcePosition));
         }
 
         return expressions;
@@ -254,13 +254,13 @@ internal partial class Parser
 
     private IStatement ParseProgramDeclaration(Token initial)
     {
-        var startPostion = initial.SourcePosition;
+        var startPosition = initial.SourcePosition;
         Skip(); // program
         var programName = Peek();
 
         if (!Match(Identifier))
         {
-            MovePostitionToEnd();
+            MovePositionToEnd();
             var error = "Program identifier expected";
 
             AddError(error, programName.SourcePosition);
@@ -272,11 +272,11 @@ internal partial class Parser
 
         var endOfProgram = PeekNext();
 
-        var result = new ProgramStatement(children, GetSourcePositionFromRange(startPostion, endOfProgram.SourcePosition));
-        MovePostitionToEnd();
+        var result = new ProgramStatement(children, GetSourcePositionFromRange(startPosition, endOfProgram.SourcePosition));
+        MovePositionToEnd();
         return result;
 
-        void MovePostitionToEnd()
+        void MovePositionToEnd()
         {
             _position = _tokens.Count - 1;
         }

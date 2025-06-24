@@ -83,12 +83,12 @@ public class ExpressionParserTests
         var variableExpression = assignmentExpression.Left as VariableExpression;
         Assert.AreEqual("foo", variableExpression?.Name);
 
-        var binrayExpression = assignmentExpression.Right as AdditionExpression;
-        Assert.IsNotNull(binrayExpression);
+        var binaryExpression = assignmentExpression.Right as AdditionExpression;
+        Assert.IsNotNull(binaryExpression);
 
-        Assert.IsInstanceOfType(binrayExpression.Left, typeof(IntegerLiteralExpression));
+        Assert.IsInstanceOfType(binaryExpression.Left, typeof(IntegerLiteralExpression));
 
-        var rightExpression = binrayExpression.Right as MultiplicationExpression;
+        var rightExpression = binaryExpression.Right as MultiplicationExpression;
         Assert.AreEqual("1", rightExpression?.Left.Value);
         Assert.AreEqual("3", rightExpression?.Right.Value);
     }

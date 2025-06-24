@@ -2,7 +2,7 @@
 
 internal abstract class BinaryExpression : IExpression
 {
-    protected abstract string Delimeter { get; }
+    protected abstract string Delimiter { get; }
 
     public BinaryExpression(IExpression left, IExpression right, SourcePosition sourcePosition)
     {
@@ -24,7 +24,7 @@ internal abstract class BinaryExpression : IExpression
 
     public SourcePosition SourcePosition { get; }
 
-    public string Value => $"{Left.Value} {Delimeter} {Right.Value}";
+    public string Value => $"{Left.Value} {Delimiter} {Right.Value}";
 
     internal IExpression Left { get; }
 
