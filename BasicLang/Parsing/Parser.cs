@@ -10,7 +10,7 @@ internal partial class Parser
 
     private readonly ExpressionParser _expressionParser;
 
-    private readonly List<ProgramError> _parsingErrors = new();
+    private readonly List<ProgramError> _parsingErrors = [];
 
     private readonly string _sourceCode;
 
@@ -18,7 +18,7 @@ internal partial class Parser
 
     public Parser(IEnumerable<Token> tokens, string sourceCode)
     {
-        _tokens = tokens.Where(t => t.Type != Comment).ToArray();
+        _tokens = [.. tokens.Where(t => t.Type != Comment)];
         _sourceCode = sourceCode;
         _expressionParser = new(this);
     }
@@ -145,6 +145,7 @@ internal partial class Parser
 
         return (result, end);
     }
+
     private IStatement ParseIf(Token current)
     {
         var (condition, onTrueStatement) = ParseIfStatement();
@@ -329,7 +330,7 @@ internal partial class Parser
     private IEnumerable<IStatement> ParseUntilTokenMet(TokenType type)
     {
         var result = new List<IStatement>();
-        while (!MatchNext(type))
+        while (!MatchNext(type) && !MatchNext(EoF))
         {
             Skip();
             result.Add(ParseStatement());
