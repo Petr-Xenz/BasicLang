@@ -498,8 +498,7 @@ public class ParserTests
 
     private static IEnumerable<object[]> ValidSourceCode()
     {
-        yield return new object[]
-        {
+        yield return [
             """
             PROGRAM product
             ! taken from Chapter 2 of Gould & Tobochnik
@@ -509,9 +508,8 @@ public class ParserTests
             PRINT force
             END
             """,
-        };
-        yield return new object[]
-        {
+        ];
+        yield return [
             """
             PROGRAM product2
             INPUT m
@@ -520,6 +518,6 @@ public class ParserTests
             PRINT "force (in Newtons) ="; force
             END
             """
-        };
+        ];
     }
 }
