@@ -150,6 +150,25 @@ public class LexerTests
         CollectionAssert.AreEqual(expected, result);
     }
 
+    [TestMethod]
+    public void StringsLexingWithFollowUpTokensLexing()
+    {
+        var source = """
+                     "foo" bar baz
+                     """;
+        var expected = new Token[]
+        {
+            new(TokenType.String, "\"foo\"", new SourcePosition(0, 1, 1, 5)),
+            new(Identifier, "bar", new SourcePosition(6, 1, 7, 3)),
+            new(Identifier, "baz", new SourcePosition(10, 1, 11, 3)),
+            new(EoF, "", new SourcePosition(13, 1, 14, 0)),
+        };
+
+        var result = new Lexer(source).Lex().ToArray();
+
+        CollectionAssert.AreEqual(expected, result);
+    }
+
 
     [TestMethod]
     public void CommentsLexing()

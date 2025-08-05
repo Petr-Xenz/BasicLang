@@ -68,12 +68,18 @@ internal sealed class Lexer
             {
                 var startingPosition = _position;
                 var startingColumn = _columnPosition;
+
                 _position++;
                 _columnPosition++;
-                MoveWhile(c => c != '"' || c != '\n' || c != '\r');
+                MoveWhile(c => c is not ('"' or '\n' or '\r'));
+
+                if (Peek() == '"')
+                {
+                    Move();
+                }
 
                 // TODO error reporting
-                var tokenPosition = new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition);
+                    var tokenPosition = new SourcePosition(startingPosition, _currentLine, startingColumn, _position - startingPosition);
                 yield return new Token(TokenType.String, _source[startingPosition.._position], tokenPosition);
             }
             else if (Peek() == '!')
@@ -90,38 +96,32 @@ internal sealed class Lexer
             else if (Peek() == '=' && PeekNext() == '=')
             {
                 yield return new Token(Equal, "==", new SourcePosition(_position, _currentLine, _columnPosition, 2));
-                _position += 2;
-                _columnPosition += 2;
+                Move(2);
             }
             else if (Peek() == '<' && PeekNext() == '>')
             {
                 yield return new Token(NotEqual, "<>", CreateSimplePosition(2));
-                _position += 2;
-                _columnPosition += 2;
+                Move(2);
             }
             else if (Peek() == '>' && PeekNext() == '=')
             {
                 yield return new Token(GreaterThenOrEqual, ">=", CreateSimplePosition(2));
-                _position += 2;
-                _columnPosition += 2;
+                Move(2);
             }
             else if (Peek() == '<' && PeekNext() == '=')
             {
                 yield return new Token(LessThenOrEqual, "<=", CreateSimplePosition(2));
-                _position += 2;
-                _columnPosition += 2;
+                Move(2);
             }
             else if (_simpleOperatorsToType.TryGetValue(Peek(), out var type))
             {
                 yield return new Token(type, Peek().ToString(), CreateSimplePosition(1));
-                _position++;
-                _columnPosition++;
+                Move();
             }
             else if (char.IsWhiteSpace(Peek()))
             {
                 // TODO WST
-                _position++;
-                _columnPosition++;
+                Move();
                 MoveWhile(char.IsWhiteSpace);
             }
         }
@@ -161,8 +161,7 @@ internal sealed class Lexer
     {
         var startingPosition = _position;
         var startingColumn = _columnPosition;
-        _position++;
-        _columnPosition++;
+        Move();
         MoveWhile(char.IsLetterOrDigit);
 
         var length = _position - startingPosition;
@@ -175,21 +174,17 @@ internal sealed class Lexer
     {
         while (_position < _source.Length && predicate(Peek()))
         {
-            _position++;
-            _columnPosition++;
+            Move();
         }
     }
 
-    private char Move()
+    private void Move(int distance = 1)
     {
-        if (_position < _source.Length)
+        if (_position + distance <= _source.Length)
         {
-            _position++;
-            _columnPosition++;
-            return _source[_position];
+            _position += distance;
+            _columnPosition += distance;
         }
-
-        return '\0';
     }
 
     private char Peek() => _source[_position];
