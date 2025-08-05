@@ -5,7 +5,7 @@ internal class StringExpression : IExpression
     public StringExpression(Token token)
     {
         Value = token.Value;
-        LiteralValue = token.Value[1..^2];
+        LiteralValue = token.Value[1..^1];
         SourcePosition = token.SourcePosition;
     }
 

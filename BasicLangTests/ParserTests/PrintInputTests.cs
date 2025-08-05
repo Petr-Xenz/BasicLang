@@ -43,7 +43,10 @@ public class PrintInputTests
 
         var inputStatement = tree.RootStatement as InputStatement;
         Assert.IsNotNull(inputStatement);
-        Assert.AreEqual("foo", (inputStatement.Expressions.Single() as VariableExpression)?.Value);
+
+        var expression = Assert.ContainsSingle(inputStatement.InputExpressions);
+        Assert.AreEqual("foo", expression.Value);
+        Assert.IsNull(expression.PromptExpression);
     }
 
     [TestMethod]
@@ -56,10 +59,81 @@ public class PrintInputTests
 
         var inputStatement = tree.RootStatement as InputStatement;
         Assert.IsNotNull(inputStatement);
-        var expressions = inputStatement.Expressions.ToList();
 
-        Assert.AreEqual("foo", (expressions[0] as VariableExpression)?.Value);
-        Assert.AreEqual("bar", (expressions[1] as VariableExpression)?.Value);
-        Assert.AreEqual("baz", (expressions[2] as VariableExpression)?.Value);
+        var expression = Assert.ContainsSingle(inputStatement.InputExpressions);
+        Assert.IsNull(expression.PromptExpression);
+        var variableExpressions = expression.Variables.ToArray();
+
+        Assert.AreEqual("foo", variableExpressions[0].Value);
+        Assert.AreEqual("bar", variableExpressions[1].Value);
+        Assert.AreEqual("baz", variableExpressions[2].Value);
+    }
+
+    [TestMethod]
+    public void InputStatementPromptExpression()
+    {
+        var source = """input "Prompt" foo""";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var inputStatement = tree.RootStatement as InputStatement;
+        Assert.IsNotNull(inputStatement);
+        var expression = Assert.ContainsSingle(inputStatement.InputExpressions);
+
+        Assert.IsNotNull(expression.PromptExpression);
+        Assert.AreEqual("\"Prompt\"", expression.PromptExpression.Value);
+
+        var variableExpression = Assert.ContainsSingle(expression.Variables);
+        Assert.AreEqual("foo", variableExpression.Value);
+    }
+
+    [TestMethod]
+    public void InputStatementPromptExpressionMultipleInputs()
+    {
+        var source = """input "Prompt" foo, bar""";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var inputStatement = tree.RootStatement as InputStatement;
+        Assert.IsNotNull(inputStatement);
+        var expression = Assert.ContainsSingle(inputStatement.InputExpressions);
+
+        Assert.IsNotNull(expression.PromptExpression);
+        Assert.AreEqual("\"Prompt\"", expression.PromptExpression.Value);
+
+        var variableExpressions = expression.Variables.ToArray();
+        Assert.HasCount(2, variableExpressions);
+        Assert.AreEqual("foo", variableExpressions[0].Value);
+        Assert.AreEqual("bar", variableExpressions[1].Value);
+    }
+
+    [TestMethod]
+    public void InputStatementMultiplePromptExpressionWithIndividualInputs()
+    {
+        var source = """input "Prompt" foo "Second text" bar""";
+        var tokens = new Lexer(source).Lex();
+
+        var tree = new Parser(tokens, source).Parse();
+
+        var inputStatement = tree.RootStatement as InputStatement;
+        Assert.IsNotNull(inputStatement);
+        var expressions = inputStatement.InputExpressions.ToArray();
+        Assert.HasCount(2, expressions);
+
+        var expression1 = expressions[0];
+        Assert.IsNotNull(expression1.PromptExpression);
+        Assert.AreEqual("\"Prompt\"", expression1.PromptExpression.Value);
+
+        var variableExpression1 = Assert.ContainsSingle(expression1.Variables);
+        Assert.AreEqual("foo", variableExpression1.Value);
+
+        var expression2 = expressions[1];
+        Assert.IsNotNull(expression2.PromptExpression);
+        Assert.AreEqual("\"Second text\"", expression2.PromptExpression.Value);
+
+        var variableExpression2 = Assert.ContainsSingle(expression2.Variables);
+        Assert.AreEqual("bar", variableExpression2.Value);
     }
 }

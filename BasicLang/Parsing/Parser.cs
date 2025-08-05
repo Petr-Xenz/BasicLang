@@ -1,5 +1,6 @@
 ﻿using BasicLang.AbstractTree;
 using BasicLang.AbstractTree.Statements;
+using BasicLang.AbstractTree.Statements.Expressions;
 using static BasicLang.AbstractTree.TokenType;
 
 namespace BasicLang.Parsing;
@@ -124,7 +125,12 @@ internal partial class Parser
                 Skip(); // Step
                 Expect(Number);
                 if (Peek().Value.Contains('.'))
+                {
+
                     throw new ProgramException("Integer literal expected", Peek());
+                }
+
+
                 step = long.Parse(Consume().Value);
             }
 
@@ -187,8 +193,44 @@ internal partial class Parser
     private IStatement ParseInput(Token current)
     {
         Skip();
-        var expressions = ParseExpressionsList(current);
-        return new InputStatement(expressions, GetSourcePositionFromRange(current, Peek()));
+        var expressions = ParseInputExpressionsUntilEoL(current).ToArray();
+
+        if (expressions.Length == 0)
+        {
+            throw new ProgramException("Expected string or variable expression for Input statement", current.SourcePosition);
+        }
+
+        var inputExpressions = new List<InputStatement.InputExpression>();
+        var i = 0;
+        while (i < expressions.Length)
+        {
+            var variablesExpressions = new List<VariableExpression>();
+            var stringExpression = expressions[i] as StringExpression;
+            if (stringExpression is not null)
+            {
+                i++;
+            }
+
+            while (i < expressions.Length && expressions[i] is not StringExpression)
+            {
+                var variableExpression = expressions[i] as VariableExpression
+                    ?? throw new ProgramException("Unexpected expression for input", expressions[i].SourcePosition);
+                variablesExpressions.Add(variableExpression);
+                i++;
+            }
+
+            if (variablesExpressions.Count == 0)
+            {
+                throw new ProgramException("Input must requires at least one variable expression", current.SourcePosition);
+            }
+
+            var firstExpression = stringExpression as IExpression ?? variablesExpressions[0];
+            var lastExpression = variablesExpressions[^1];
+            inputExpressions.Add(new InputStatement.InputExpression(stringExpression, variablesExpressions,
+                         GetSourcePositionFromRange(firstExpression, lastExpression)));
+        }
+
+        return new InputStatement(inputExpressions, GetSourcePositionFromRange(current, Peek()));
     }
 
     private IStatement ParsePrint(Token current)
@@ -214,6 +256,32 @@ internal partial class Parser
         if (expressions.Count == 0)
         {
             _parsingErrors.Add(new ProgramError("Print statement should have at lest one expression", initial.SourcePosition));
+        }
+
+        return expressions;
+    }
+
+    private IEnumerable<IExpression> ParseInputExpressionsUntilEoL(Token initial)
+    {
+        var expressions = new List<IExpression>();
+
+        while (!Match(EoL, EoF))
+        {
+            var current = Peek();
+            if (current is { Type: Comma or Semicolon })
+            {
+                Skip();
+            }
+
+            if (Match(Identifier, TokenType.String))
+            {
+                expressions.Add(_expressionParser.Parse(Peek()));
+            }
+            else
+            {
+                _parsingErrors.Add(new ProgramError("Unexpected expression for input statement", Peek().SourcePosition));
+                Skip();
+            }
         }
 
         return expressions;
