@@ -16,7 +16,7 @@ Both integer and floating point numbers are supported. For example `0`, `123`, `
 ```ebnf
 number ::= integer | float ;
 integer ::= digit, { digit } ;
-float ::=digit, { digit }, ".", digit, { digit } ;
+float ::= digit, { digit }, ".", digit, { digit } ;
 ```
 
 ### Strings
@@ -64,7 +64,46 @@ not ::= "not", boolean | identifier | grouping | array_element | function_call ;
 ### Array element access
 
 ```ebnf
-array_element ::= identifier | function_call, "[", expression, "]" ;
+array_element ::= identifier | function_call | grouping, "[", expression, "]" ;
+```
+
+### Binary expressions
+
+#### Arithmetic expressions
+
+```ebnf
+addition ::= expression, "+", expression ;
+subtraction ::= expression, "-", expression ;
+multiplication ::= expression, "*", expression ;
+division ::= expression, "/", expression ;
+```
+
+#### Logical expressions
+
+```ebnf
+conjunction ::= expression, "and", expression ;
+disjunction ::= expression, "or", expression ;
+exclusiveDisjunction ::= expression, "xor", expression ;
+```
+
+#### Comparison expressions
+
+> [!NOTE]
+> For equality operator there is a difference for this implementation to make it easier to implement and context independent. Instead of `=` equality operator is C-like - `==`
+
+```ebnf
+equality ::= expression, "==", expression ;
+inequality ::= expression, "!=", expression ;
+lessThan ::= expression, "<", expression ;
+greaterThan ::= expression, ">", expression ;
+lessOrEqualThan ::= expression, "<=", expression ;
+greaterOrEqualThan ::= expression, ">=", expression ;
+```
+
+#### Assignment expression
+
+```ebnf
+assignment :== { let }, identifier "=", expression ;
 ```
 ## Comments
 
