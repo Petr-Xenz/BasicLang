@@ -100,11 +100,6 @@ lessOrEqualThan ::= expression, "<=", expression ;
 greaterOrEqualThan ::= expression, ">=", expression ;
 ```
 
-#### Assignment expression
-
-```ebnf
-assignment :== { let }, identifier "=", expression ;
-```
 ## Comments
 
 Comments are a free text starting with a `!` character until the end of line.
@@ -113,3 +108,61 @@ Comments are a free text starting with a `!` character until the end of line.
 comment ::= "!" , { all characters - "!" }, EoL ;
 ```
 
+## Statements
+
+### Program
+
+Main statement to mark the beginning of a program in BASIC
+
+```ebnf
+program ::= "program", identifier, { comment }, EoL, (statement | comment)*, "end" ; 
+```
+
+### Variable assignment
+
+```ebnf
+assignment ::= identifier "=", expression ;
+```
+
+### Variable declaration
+
+```ebnf
+declaration ::= "let", assignment ; 
+```
+
+### Flow of control
+
+#### Conditional statement
+
+Conditional statements can have only a single statement for each branch
+
+```ebnf
+condition ::= "if", expression, "then", EoL, statement, EoL, (elseIf)*, {else} ;
+elseIf ::= "elseIf", expression, "then" , EoL, statement ;
+else ::= "else", EoL, statement;
+```
+
+#### While loop
+
+```ebnf
+whileLoop ::= "while", expression, EoL, (statement)*, "loop" ;
+```
+
+#### Do Until loop
+
+```ebnf
+doUntilLoop ::= "do", EoL, (statement)*, EoL, "until", expression ;
+```
+
+#### For loop
+
+```ebnf
+forLoop ::= "for", assignment, "to", expression, { "step", expression }, EoL, (statement)*, EoL, "next";
+```
+
+#### Goto and label
+
+```ebnf
+label ::= identifier ;
+goto ::= "goto", label | integer;
+```
