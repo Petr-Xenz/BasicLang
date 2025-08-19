@@ -94,7 +94,7 @@ public class LoopTests
         Assert.IsNotNull(whileStatement);
 
         var condition = whileStatement.Condition as BooleanExpression;
-        Assert.AreEqual(true, condition?.LiteralValue);
+        Assert.IsTrue(condition?.LiteralValue);
         Assert.AreEqual(2, whileStatement.InnerStatements.Count());
     }
 
@@ -116,7 +116,7 @@ public class LoopTests
         Assert.IsNotNull(doUntilStatement);
 
         var condition = doUntilStatement.Condition as BooleanExpression;
-        Assert.AreEqual(true, condition?.LiteralValue);
+        Assert.IsTrue(condition?.LiteralValue);
         Assert.AreEqual(2, doUntilStatement.InnerStatements.Count());
     }
 }

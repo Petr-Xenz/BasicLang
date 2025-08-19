@@ -16,7 +16,7 @@ public class ConditionTests
         var condition = ifStatement.Condition as BooleanExpression;
         Assert.IsNotNull(condition);
 
-        Assert.AreEqual(true, condition.LiteralValue);
+        Assert.IsTrue(condition.LiteralValue);
 
         var printStatement = ifStatement.OnTrue as PrintStatement;
         Assert.IsNotNull(printStatement);
