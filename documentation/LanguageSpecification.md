@@ -163,6 +163,25 @@ forLoop ::= "for", assignment, "to", expression, { "step", expression }, EoL, (s
 #### Goto and label
 
 ```ebnf
-label ::= identifier ;
+label ::= identifier, ":";
 goto ::= "goto", label | integer;
+```
+
+#### Console IO
+
+> [!NOTE]
+> Input is missing some features, like adding question mark to provided string text by placing semicolon after it, or moving cursor position to a specific coordinate with the `TAB(x, y)` function
+
+```ebnf
+print ::= "print", expression, ("," | ";", expression)* ;
+input ::= "input", (inputExpression)+ ;
+inputExpression ::= { string }, identifier, ("," | ";", identifier)* ;
+```
+
+### Functions
+
+```ebnf
+callFunction ::= identifier, "(", (argumentList)* ")" ;
+defineFunction ::= "def", identifier, "(", (argumentList)* ")", EoL ;
+argumentList ::= expression, ("," | ";", expression)* ;
 ```
