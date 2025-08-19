@@ -203,7 +203,7 @@ internal partial class Parser
             {
                 var name = current;
                 Skip(); // (
-                var parameters = !Match(CloseParenthesis) ? _parser.ParseExpressionsList(Peek()) : Enumerable.Empty<IExpression>();
+                var parameters = !Match(CloseParenthesis) ? _parser.ParseExpressionsList(Peek()) : [];
                 _parser.Expect(CloseParenthesis);
                 var end = Consume(); // )
 

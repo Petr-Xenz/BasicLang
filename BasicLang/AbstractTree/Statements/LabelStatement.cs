@@ -13,7 +13,7 @@ internal class LabelStatement : IStatement
 
     public string Value { get; }
 
-    public IEnumerable<IStatement> Children => Enumerable.Empty<IStatement>();
+    public IEnumerable<IStatement> Children => [];
 
     public SourcePosition SourcePosition { get; }
 

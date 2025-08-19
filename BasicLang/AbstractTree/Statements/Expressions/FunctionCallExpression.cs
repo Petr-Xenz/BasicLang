@@ -11,7 +11,7 @@ internal class FunctionCallExpression : IExpression
 
     public string Name => Value;
 
-    public IEnumerable<IExpression> Children => Enumerable.Empty<IExpression>();
+    public IEnumerable<IExpression> Children => [];
 
     public SourcePosition GeneralErrorPosition => SourcePosition;
 

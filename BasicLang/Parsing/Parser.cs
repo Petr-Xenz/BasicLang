@@ -68,7 +68,7 @@ internal partial class Parser
 
         Expect(OpenParenthesis);
         Skip(); // (
-        var arguments = !Match(CloseParenthesis) ? ParseExpressionsList(Peek()) : Enumerable.Empty<IExpression>();
+        var arguments = !Match(CloseParenthesis) ? ParseExpressionsList(Peek()) : [];
         Expect(CloseParenthesis);
         Skip(); // )
         Expect(EoL);
